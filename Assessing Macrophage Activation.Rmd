@@ -1,7 +1,7 @@
 ---
 title: "Assessing Macrophage Activation and Response to Bacterial Infection *in vitro*"
 author: "Sophie Davies"
-date: "21/11/2020"
+date: "`r format(Sys.time(), '%B, %Y')`"
 output: bookdown::html_document2
 bibliography: references.bib
 ---
@@ -16,9 +16,18 @@ knitr::opts_chunk$set(echo = FALSE,
 library(tidyverse)
 library(flowCore)
 ```
+
 <!-- Provide an introduction to the experiment, why it's important/it's application in context -->
 # Introduction
+Macrophages are mononuclear cells with high phagocytic activity, citation. They have key roles in the immune responses, particularly the production of proinflammatory cytokines and the phagocytosis of microorganisms, citation. 
 
+Phagocytosis is a major function of the macrophage, not only for pathogens, but also for the resolution of inflammation through the phagocytosis of other immune cells, such as neutrophils, citation. 
+
+The necrosis of tumours in response to bacterial-endotoxins was first determined to be an indirect process by, citation, in which the necrosis could be triggered by a serum, derived from animals treated with lipopolysaccharides (LPS), in animals not exposed to LPS. This was deemed to be mediated by a "tumour necrotizing factor" later determined to be a superfamily that includes the protein Tumour Necrosis Factor-$\alpha$ (TNF-$\alpha$). 
+
+Understanding the mechanisms by which macrophages are activated, and their subsequent production of TNF-$\alpha$, is important for aiding research into chronic inflammatory diseases such as rheumatoid arthritis and multiple sclerosis, citation. Uncontrolled macrophage activation is noted to be key in such chronic inflammatory diseases, citation, with TNF-$\alpha$ being classed as a proinflammatory macrophage marker. 
+
+The aim of this study is to gain understanding of the mechanisms by which macrophages are activated/respond and produce TNF-$\alpha$, specifically with regards to the necessity of phagocytosis in the production of TNF-$\alpha$. 
 
 <!-- Decide whether to include the images and results from the western blot analysis of own results -->
 <!-- This could allow me to show import of image  -->
@@ -62,7 +71,7 @@ fcm2Bdf <- data.frame(fcm2B@exprs)
 
 ```
 
-```{r compensation}
+```{r compensation, eval=FALSE, include=FALSE}
 
 fcsfiles <- list.files(pattern = "CytoTrol",
 system.file("extdata",
