@@ -34,7 +34,7 @@ library(flowCore)
 <!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor package flowCore -->
 # Methods
 
-
+<!-- Link for Bioconductor How to guide: https://bioconductor.org/packages/devel/bioc/vignettes/flowCore/inst/doc/HowTo-flowCore.pdf -->
 
 
 ```{r reading in the data}
@@ -49,6 +49,7 @@ fcm2A <- read.FCS(file2A, alter.names = TRUE)
 
 file2B <- "./data-raw/class-sample/class 2B.fcs"
 fcm2B <- read.FCS(file2B, alter.names = TRUE)
+
 ```
 
 
@@ -61,7 +62,16 @@ fcm2Bdf <- data.frame(fcm2B@exprs)
 
 ```
 
+```{r compensation}
 
+fcsfiles <- list.files(pattern = "CytoTrol",
+system.file("extdata",
+package = "flowWorkspaceData"),
+full = TRUE)
+fs <- read.FCS(fcsfiles)
+x <- fs[[1]]
+
+```
 # Results
 
 ```{r scatter plot}
