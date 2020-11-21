@@ -1,10 +1,9 @@
 ---
-title: "Flowcytometry"
+title: "Assessing Macrophage Activation and Response to Bacterial Infection *in vitro*"
 author: "Sophie Davies"
 date: "21/11/2020"
-output:
-bookdown::html_document2: default
-bibliography: reference.bib
+output: bookdown::html_document2
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -17,6 +16,26 @@ knitr::opts_chunk$set(echo = FALSE,
 library(tidyverse)
 library(flowCore)
 ```
+<!-- Provide an introduction to the experiment, why it's important/it's application in context -->
+# Introduction
+
+
+<!-- Decide whether to include the images and results from the western blot analysis of own results -->
+<!-- This could allow me to show import of image  -->
+# Western Blot Results from SDS
+
+
+<!-- Provide some explanation and background information on the protocol of Flow Cytometry, maybe include a brief description and comparison to Summit -->
+<!-- There is a user guide to Summit on the VLE? -->
+# Background to Flow Cytometry 
+
+
+
+<!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor package flowCore -->
+# Methods
+
+
+
 
 ```{r reading in the data}
 file1A <- "./data-raw/class-sample/class 1A.fcs"
@@ -43,6 +62,8 @@ fcm2Bdf <- data.frame(fcm2B@exprs)
 ```
 
 
+# Results
+
 ```{r scatter plot}
 
 fcm1Adf %>% 
@@ -51,7 +72,7 @@ fcm1Adf %>%
   geom_point(alpha = 0.08)
 
 ```
-```{creating a polygongate}
+```{creating a polygongate, eval=FALSE, include=FALSE}
 
 poly5 <- matrix(c(10000, 0,
                   50000, 0,
