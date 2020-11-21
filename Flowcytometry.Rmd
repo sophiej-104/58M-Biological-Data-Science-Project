@@ -1,0 +1,79 @@
+---
+title: "Flowcytometry"
+author: "Sophie Davies"
+date: "21/11/2020"
+output:
+bookdown::html_document2: default
+bibliography: reference.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE,
+                      message = FALSE)
+```
+
+```{r packages}
+library(tidyverse)
+library(flowCore)
+```
+
+```{r reading in the data}
+file1A <- "./data-raw/class-sample/class 1A.fcs"
+fcm1A <- read.FCS(file1A, alter.names = TRUE)
+
+file1B <- "./data-raw/class-sample/class 1B.fcs"
+fcm1B <- read.FCS(file1B, alter.names = TRUE)
+
+file2A <- "./data-raw/class-sample/class 2A.fcs"
+fcm2A <- read.FCS(file2A, alter.names = TRUE)
+
+file2B <- "./data-raw/class-sample/class 2B.fcs"
+fcm2B <- read.FCS(file2B, alter.names = TRUE)
+```
+
+
+```{r extracting the data into a dataframe}
+
+fcm1Adf <- data.frame(fcm1A@exprs)
+fcm1Bdf <- data.frame(fcm1B@exprs)
+fcm2Adf <- data.frame(fcm2A@exprs)
+fcm2Bdf <- data.frame(fcm2B@exprs)
+
+```
+
+
+```{r scatter plot}
+
+fcm1Adf %>% 
+  select(FS.Area, SS.Area) %>% 
+  ggplot(aes(x = FS.Area, y = SS.Area)) +
+  geom_point(alpha = 0.08)
+
+```
+```{creating a polygongate}
+
+poly5 <- matrix(c(10000, 0,
+                  50000, 0,
+                  50000, 40000,
+                  10000, 20000), 
+                ncol = 2, 
+                nrow = 4, 
+                byrow = T)
+colnames(poly5) <- c("FS.Area","SS.Area")
+gate_r1 <- polygonGate(poly5, filterId = "gate_r1")
+
+
+fcm1A_gate_r1 <- Subset(fcm1A, gate_r1)
+
+fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
+
+ggplot(data = fcm1Adf, aes(x = FS.Area, y = SS.Area)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = fcm1A_gate_r1df, 
+             aes(x = FS.Area, y = SS.Area), color = "red") 
+
+```
+
+
+
