@@ -125,6 +125,8 @@ The western blotting results looked at the overall effect of LPS and bacteria on
 
 ## Principles of Flow Cytometry 
 
+Flow cytometry involves a cell susupension being passed through a flow chamber, so that cells pass in front of lasers one-by-one. This results in light being scattered and detected by forward and side scatter detectors, allowing the determination of size and granularity. Fluorescence detectors also detect any fluorescently tagged cells for identification of specific markers. 
+
 For an overview of the technique please see the video, [@Mitedustar2015-tp]. 
 
 ```{r flow cytometry video}
@@ -133,6 +135,8 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 
 <!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor package flowCore -->
 # Methods
+
+
 
 <!-- Link for Bioconductor How to guide: https://bioconductor.org/packages/devel/bioc/vignettes/flowCore/inst/doc/HowTo-flowCore.pdf -->
 
