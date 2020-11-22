@@ -66,10 +66,9 @@ model
 (ref:Rf-value) **Identification of the Molecular Weight of TNF-$\alpha$ using Rf values** <BR> **Dashed Red** - B1 band shown in [@western-blot-figure], **Red** - B2 band shown in [@western-blot-figure], **Dashed Blue** - C1 band shown in [@western-blot-figure], **Blue** - C2 band shown in [@western-blot-figure].
 <!-- end of figure legend -->
 
-
 ```{r Rf-figure, echo=FALSE, fig.cap='(ref:Rf-value)'}
 
-ggplot(Rf, aes(Rf$Rf.Value, Rf$Log.of.Molecular.Weight..Da.)) +
+Rf_figure <- ggplot(Rf, aes(Rf$Rf.Value, Rf$Log.of.Molecular.Weight..Da.)) +
   geom_point() +
   ylab("Log of Molecular Weight (Da)") +
   xlab("Rf Value") +
@@ -91,6 +90,10 @@ ggplot(Rf, aes(Rf$Rf.Value, Rf$Log.of.Molecular.Weight..Da.)) +
   annotate("text", x = 0.9, y = 5.3, label = "- - - = C1", col = "blue") +
   annotate("text", x = 0.9, y = 5.2, label = "___ = C2", col = "blue") +
   annotate("text", x = 0.2, y = 5.4, label = "y = -1.099x + 5.111")
+
+Rf_figure
+
+ggsave("figures/Rf_figure.png", Rf_figure)
 
 ```
 
