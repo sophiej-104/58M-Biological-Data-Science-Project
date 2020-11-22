@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = FALSE,
 
 ```{r packages}
 library(tidyverse)
+library(ggplot2)
 library(flowCore)
 ```
 
@@ -39,6 +40,58 @@ The aim of this study is to gain understanding of the mechanisms by which macrop
 
 ```{r western-blot-figure, fig.cap= '(ref:western-blot)', out.width="50%"}
 knitr::include_graphics("images/Western Blot New.png")
+```
+
+```{r calculating Rf value, include=FALSE}
+Rf <- read.csv("data-raw/Western Blot.csv")
+
+ggplot(Rf, aes(Rf.Value, Log.of.Molecular.Weight..Da.)) +
+         geom_point() +
+  ylab("Log of Molecular Weight (Da)") +
+  xlab("Rf Value") +
+  theme_classic() +
+  geom_vline(xintercept = 0.6, col = "red") +
+  geom_hline(yintercept = 4.4516,col = "red") +
+  geom_abline(slope = -1.099, intercept = 5.111)
+  geom_smooth(method = "lm")
+
+str(Rf)
+#points(x = 0.6, y = 4.4516, col="red")
+  
+model <- lm(Log.of.Molecular.Weight..Da. ~ Rf.Value, data = Rf)
+model
+```
+
+<!-- figure legend -->
+(ref:Rf-value) **Identification of the Molecular Weight of TNF-$\alpha$ using Rf values** <BR> **Dashed Red** - B1 band shown in [@western-blot-figure], **Red** - B2 band shown in [@western-blot-figure], **Dashed Blue** - C1 band shown in [@western-blot-figure], **Blue** - C2 band shown in [@western-blot-figure].
+<!-- end of figure legend -->
+
+
+```{r Rf-figure, echo=FALSE, fig.cap='(ref:Rf-value)'}
+
+ggplot(Rf, aes(Rf$Rf.Value, Rf$Log.of.Molecular.Weight..Da.)) +
+  geom_point() +
+  ylab("Log of Molecular Weight (Da)") +
+  xlab("Rf Value") +
+  theme_bw() +
+  stat_smooth(method = "lm", se = FALSE, col = "black") +
+  geom_vline(xintercept = 0.6, col = "red", lty = 2) +
+  geom_hline(yintercept = 4.4516,col = "red", lty = 2) +
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(axis.line.x = element_line(color = "black"),
+        axis.line.y = element_line(color = "black")) +
+  geom_vline(xintercept = 0.6167, col = "blue", lty = 2) +
+  geom_hline(yintercept = 4.4332, col = "blue", lty = 2) +
+  geom_vline(xintercept = 0.6833, col = "red") +
+  geom_hline(yintercept = 4.3601, col = "red") + 
+  geom_vline(xintercept = 0.6667, col = "blue") +
+  geom_hline(yintercept = 4.3782, col = "blue") +
+  annotate("text", x = 0.9, y = 5.5, label = "- - - = B1", col = "red") +
+  annotate("text", x = 0.9, y = 5.4, label = "___ = B2", col = "red") +
+  annotate("text", x = 0.9, y = 5.3, label = "- - - = C1", col = "blue") +
+  annotate("text", x = 0.9, y = 5.2, label = "___ = C2", col = "blue") +
+  annotate("text", x = 0.2, y = 5.4, label = "y = -1.099x + 5.111")
+
 ```
 
 <!-- Provide some explanation and background information on the protocol of Flow Cytometry, maybe include a brief description and comparison to Summit -->
