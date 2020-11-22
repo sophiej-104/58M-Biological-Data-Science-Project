@@ -2,7 +2,12 @@
 title: "Assessing Macrophage Activation and Response to Bacterial Infection *in vitro*"
 author: "Sophie Davies"
 date: "`r format(Sys.time(), '%B, %Y')`"
-output: bookdown::html_document2
+output: 
+  bookdown::html_document2:
+    fig_caption: true
+    number_sections: true
+    toc: true
+    toc_float: true
 bibliography: references.bib
 ---
 
@@ -48,6 +53,7 @@ All cells were treated with Brefeldin-A, an inhibitor of protein transport and s
 ```{r western-blot-figure, fig.cap= '(ref:western-blot)', out.width="50%"}
 knitr::include_graphics("images/Western Blot New.png")
 ```
+
 
 ```{r calculating Rf value, include=FALSE}
 Rf <- read.csv("data-raw/Western Blot.csv")
@@ -104,11 +110,12 @@ ggsave("figures/Rf_figure.png", Rf_figure)
 
 ```
 
+
 <!-- Provide some explanation and background information on the protocol of Flow Cytometry, maybe include a brief description and comparison to Summit -->
 <!-- There is a user guide to Summit on the VLE? -->
-# Background to Flow Cytometry 
+# Determining the level of TNF-$\alpha$ expression using Flow Cytometry
 
-
+## Principles of Flow Cyotmetry 
 
 <!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor package flowCore -->
 # Methods
