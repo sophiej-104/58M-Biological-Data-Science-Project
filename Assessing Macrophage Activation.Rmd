@@ -33,6 +33,13 @@ The aim of this study is to gain understanding of the mechanisms by which macrop
 <!-- This could allow me to show import of image  -->
 # Western Blot Results from SDS
 
+<!-- figure legend -->
+(ref:western-blot) **Western blot from SDS-PAGE, analysis of TNF-$\alpha$ in RAW 264.7 cells treated with Brefeldin-A. <BR> (A)** Untreated RAW 264.7 cells <BR> **(B)** RAW 264.7 cells treated with 100 ng/ml LPS from *E.coli* <BR> **(C)** RAW 264.7 cells treated with *E.coli* bacteria
+<!-- end of figure legend -->
+
+```{r western-blot-figure, fig.cap= '(ref:western-blot)', out.width="50%"}
+knitr::include_graphics("images/Western Blot New.png")
+```
 
 <!-- Provide some explanation and background information on the protocol of Flow Cytometry, maybe include a brief description and comparison to Summit -->
 <!-- There is a user guide to Summit on the VLE? -->
@@ -115,5 +122,5 @@ ggplot(data = fcm1Adf, aes(x = FS.Area, y = SS.Area)) +
 
 ```
 
-
+# References
 
