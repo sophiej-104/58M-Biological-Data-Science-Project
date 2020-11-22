@@ -4,7 +4,7 @@ author: "Sophie Davies"
 date: "`r format(Sys.time(), '%B, %Y')`"
 output: 
   bookdown::html_document2:
-    fig_caption: true
+    fig_caption: yes
     number_sections: true
     toc: true
     toc_float: true
@@ -39,21 +39,22 @@ The aim of this study is to gain understanding of the mechanisms by which macrop
 <!-- This could allow me to show import of image  -->
 # Is phagocytosis required to trigger the production of TNF-$\alpha$ by mcrophages? 
 
-The TNF-$\alpha$ production from RAW 264.7 cells is shown in \@ref(western-blot-figure) and \@ref(Rf-figure). Membranes from the SDS-PAGE were incubated with the primary antibody solution, rabbit anti-TNF-$\alpha$ in TBS-T with 5% milk, and consequently incubated with the secondary antibody solution, goat anti-rabbit IgG-linked to horseradish peroxidase in PBS-T in milk. 
+The TNF-$\alpha$ production from RAW 264.7 cells is shown in Figures \@ref(fig:western-blot-figure) and \@ref(fig:Rf-figure). Membranes from the SDS-PAGE were incubated with the primary antibody solution, rabbit anti-TNF-$\alpha$ in TBS-T with 5% milk, and consequently incubated with the secondary antibody solution, goat anti-rabbit IgG-linked to horseradish peroxidase in PBS-T in milk. 
 
 All cells were treated with Brefeldin-A, an inhibitor of protein transport and secretion, in order to enhance the intracellular cytokine (TNF-$\alpha$) staining signal for the Western Blot Analysis. 
-\@ref(western-blot-figure) indicates that only RAW 264.7 cells treated with 100 ng/ml LPS from *E.coli* and RAW 264.7 cells treated with *E.coli* bacteria produced TNF-$\alpha$, as shown by the bands labelled B1, B2, C1 and C2 respectively. 
+Figure \@ref(fig:western-blot-figure) indicates that only RAW 264.7 cells treated with 100 ng/ml LPS from *E.coli* and RAW 264.7 cells treated with *E.coli* bacteria produced TNF-$\alpha$, as shown by the bands labelled B1, B2, C1 and C2 respectively. 
 
-\@ref(Rf-figure), illustrates the calculation of the molecular weights of the labelled bands from \@ref(western-blot-figure), using the calculated molecular weights of the molecular marker bands. From the calculated molecular weights of \@ref(Rf-figure), the identity of the bands on the Western Blot can be confirmed to be that of TNF-$\alpha$. Bands B1 and C1 calculated to be 28.3 kDa and 27.11 kDa respectively. Bands B2 and C2 calculated to be 22.9 kDa and 23.89 kDa respectively. These were compared to the datasheet, [@CellSignal2017-rp] and [@UniProtConsortium2019-su], to confirm the identification of the TNF-$\alpha$ bands. 
+Figure \@ref(fig:Rf-figure), illustrates the calculation of the molecular weights of the labelled bands from Figure \@ref(fig:western-blot-figure), using the calculated molecular weights of the molecular marker bands. From the calculated molecular weights of Figure \@ref(fig:Rf-figure), the identity of the bands on the Western Blot can be confirmed to be that of TNF-$\alpha$. Bands B1 and C1 calculated to be 28.3 kDa and 27.11 kDa respectively. Bands B2 and C2 calculated to be 22.9 kDa and 23.89 kDa respectively. These were compared to the datasheet, [@CellSignal2017-rp] and [@UniProtConsortium2019-su], to confirm the identification of the TNF-$\alpha$ bands. 
 
-<!-- figure legend -->
-(ref:western-blot) **Western blot from SDS-PAGE, analysis of TNF-$\alpha$ in RAW 264.7 cells treated with Brefeldin-A. <BR> (A)** Untreated RAW 264.7 cells <BR> **(B)** RAW 264.7 cells treated with 100 ng/ml LPS from *E.coli* <BR> **(C)** RAW 264.7 cells treated with *E.coli* bacteria
-<!-- end of figure legend -->
-
-```{r western-blot-figure, fig.cap= '(ref:western-blot)', out.width="50%"}
+```{r western-blot-figure, fig.cap='(ref:western)', out.width="50%"}
 knitr::include_graphics("images/Western Blot New.png")
 ```
 
+<!-- figure legend -->
+
+(ref:western) **Western blot from SDS-PAGE, analysis of TNF-$\alpha$ in RAW 264.7 cells treated with Brefeldin-A. <BR> (A)** Untreated RAW 264.7 cells <BR> **(B)** RAW 264.7 cells treated with 100 ng/ml LPS from *E.coli* <BR> **(C)** RAW 264.7 cells treated with *E.coli* bacteria
+
+<!-- end of figure legend -->
 
 ```{r calculating Rf value, include=FALSE}
 Rf <- read.csv("data-raw/Western Blot.csv")
@@ -75,9 +76,6 @@ model <- lm(Log.of.Molecular.Weight..Da. ~ Rf.Value, data = Rf)
 model
 ```
 
-<!-- figure legend -->
-(ref:Rf-value) **Identification of the Molecular Weight of TNF-$\alpha$ using Rf values** <BR> **Dashed Red** - B1 band shown in \@ref(western-blot-figure), **Red** - B2 band shown in \@ref(western-blot-figure), **Dashed Blue** - C1 band shown in \@ref(western-blot-figure), **Blue** - C2 band shown in \@ref(western-blot-figure).
-<!-- end of figure legend -->
 
 ```{r Rf-figure, echo=FALSE, fig.cap='(ref:Rf-value)'}
 
@@ -110,6 +108,11 @@ ggsave("figures/Rf_figure.png", Rf_figure)
 
 ```
 
+<!-- figure legend -->
+
+(ref:Rf-value) **Identification of the Molecular Weight of TNF-$\alpha$ using Rf values** <BR> **Dashed Red** - B1 band shown in Figure \@ref(fig:western-blot-figure), **Red** - B2 band shown in Figure \@ref(fig:western-blot-figure), **Dashed Blue** - C1 band shown in Figure \@ref(fig:western-blot-figure), **Blue** - C2 band shown in Figure \@ref(fig:western-blot-figure).
+
+<!-- end of figure legend -->
 
 <!-- Provide some explanation and background information on the protocol of Flow Cytometry, maybe include a brief description and comparison to Summit -->
 <!-- There is a user guide to Summit on the VLE? -->
