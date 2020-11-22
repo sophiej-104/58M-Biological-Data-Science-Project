@@ -82,7 +82,7 @@ model
 
 ```{r Rf-figure, echo=FALSE, fig.cap='(ref:Rf-value)'}
 
-Rf_figure <- ggplot(Rf, aes(Rf$Rf.Value, Rf$Log.of.Molecular.Weight..Da.)) +
+Rf_figure <- ggplot(Rf, aes(Rf.Value, Log.of.Molecular.Weight..Da.)) +
   geom_point() +
   ylab("Log of Molecular Weight (Da)") +
   xlab("Rf Value") +
