@@ -141,18 +141,32 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 <!-- Link for Bioconductor How to guide: https://bioconductor.org/packages/devel/bioc/vignettes/flowCore/inst/doc/HowTo-flowCore.pdf -->
 
 
+
+<!-- Sample Summaries: -->
+<!-- Sample 1: unstimulated cells kept in culture medium -->
+<!-- Sample 2: cells treated with 100 ng/ml LPS from E.coli -->
+<!-- Sample 3: mCherry fluorescent E.coli bacteria -->
+<!-- Samples marked A: use secondary antibody alone, without the addition of the primary antibody, as a control. -->
+<!-- Samples marked B: use both primary and secondary antibodies -->
+
 ```{r reading in the data}
-file1A <- "./data-raw/class-sample/class 1A.fcs"
+file1A <- "./data-raw/example-data/1A. Unstimulated Secondary alone.fcs"
 fcm1A <- read.FCS(file1A, alter.names = TRUE)
 
-file1B <- "./data-raw/class-sample/class 1B.fcs"
+file1B <- "./data-raw/example-data/1B. Unstimulated Primary and Secondary.fcs"
 fcm1B <- read.FCS(file1B, alter.names = TRUE)
 
-file2A <- "./data-raw/class-sample/class 2A.fcs"
+file2A <- "./data-raw/example-data/2A. LPS Secondary alone.fcs"
 fcm2A <- read.FCS(file2A, alter.names = TRUE)
 
-file2B <- "./data-raw/class-sample/class 2B.fcs"
+file2B <- "./data-raw/example-data/2B. LPS Primary and Secondary.fcs"
 fcm2B <- read.FCS(file2B, alter.names = TRUE)
+
+file3A <- "./data-raw/example-data/3A. mCherry+ Bacteria Secondary alone.fcs"
+fcm3A <- read.FCS(file3A, alter.names = TRUE)
+
+file3B <- "./data-raw/example-data/3B. mCherry+ Bacteria Primary and Secondary.fcs"
+fcm3B <- read.FCS(file3B, alter.names = TRUE)
 
 ```
 
@@ -163,6 +177,8 @@ fcm1Adf <- data.frame(fcm1A@exprs)
 fcm1Bdf <- data.frame(fcm1B@exprs)
 fcm2Adf <- data.frame(fcm2A@exprs)
 fcm2Bdf <- data.frame(fcm2B@exprs)
+fcm3Adf <- data.frame(fcm3A@exprs)
+fcm3Bdf <- data.frame(fcm3B@exprs)
 
 ```
 
@@ -176,26 +192,31 @@ fs <- read.FCS(fcsfiles)
 x <- fs[[1]]
 
 ```
+
 # Results
 
-```{r scatter plot}
+
+```{r scatter plot of 1a, include=FALSE}
 
 fcm1Adf %>% 
-  select(FS.Area, SS.Area) %>% 
-  ggplot(aes(x = FS.Area, y = SS.Area)) +
+  select(FS.Lin, SS.Lin) %>% 
+  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
   geom_point(alpha = 0.08)
 
 ```
-```{creating a polygongate, eval=FALSE, include=FALSE}
 
-poly5 <- matrix(c(10000, 0,
+```{r creating a polygongate sample 1a}
+
+poly5 <- matrix(c(20000, 0,
                   50000, 0,
-                  50000, 40000,
-                  10000, 20000), 
+                  50000, 60000,
+                  20000, 60000), 
                 ncol = 2, 
                 nrow = 4, 
                 byrow = T)
-colnames(poly5) <- c("FS.Area","SS.Area")
+
+colnames(poly5) <- c("FS.Lin","SS.Lin")
+
 gate_r1 <- polygonGate(poly5, filterId = "gate_r1")
 
 
@@ -203,10 +224,139 @@ fcm1A_gate_r1 <- Subset(fcm1A, gate_r1)
 
 fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
 
-ggplot(data = fcm1Adf, aes(x = FS.Area, y = SS.Area)) +
+fig_gate_1A <- ggplot(data = fcm1Adf, aes(x = FS.Lin, y = SS.Lin)) +
   geom_point(alpha = 0.5) +
   geom_point(data = fcm1A_gate_r1df, 
-             aes(x = FS.Area, y = SS.Area), color = "red") 
+             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+
+```
+
+```{r scatter plot of 1b, include=FALSE}
+
+fcm1Bdf %>%
+  select(FS.Lin, SS.Lin) %>%
+  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.08)
+
+```
+
+```{r gating sample 1b}
+
+fcm1B_gate_r1 <- Subset(fcm1B, gate_r1)
+
+fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
+
+fig_gate_1B <- ggplot(data = fcm1Bdf, aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = fcm1B_gate_r1df, 
+             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+
+```
+
+```{r scatter plot of 2a, include=FALSE}
+
+fcm2Adf %>%
+  select(FS.Lin, SS.Lin) %>%
+  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.08)
+
+```
+
+```{r gating sample 2a}
+
+fcm2A_gate_r1 <- Subset(fcm2A, gate_r1)
+
+fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
+
+fig_gate_2A <- ggplot(data = fcm2Adf, aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = fcm2A_gate_r1df, 
+             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+
+```
+
+```{r scatter plot of 2b, include=FALSE}
+
+fcm2Bdf %>%
+  select(FS.Lin, SS.Lin) %>%
+  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.08)
+
+```
+
+```{r gating sample 2b}
+
+fcm2B_gate_r1 <- Subset(fcm2B, gate_r1)
+
+fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
+
+fig_gate_2B <- ggplot(data = fcm2Bdf, aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = fcm2B_gate_r1df, 
+             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+
+
+```
+
+```{r scatter plot of 3a, include=FALSE}
+
+fcm3Adf %>%
+  select(FS.Lin, SS.Lin) %>%
+  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.08)
+
+```
+
+```{r gating sample 3a}
+
+fcm3A_gate_r1 <- Subset(fcm3A, gate_r1)
+
+fcm3A_gate_r1df <- data.frame(fcm3A_gate_r1@exprs)
+
+fig_gate_3A <- ggplot(data = fcm3Adf, aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = fcm3A_gate_r1df, 
+             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+
+```
+
+```{r scatter plot of 3b, include=FALSE}
+
+fcm3Bdf %>%
+  select(FS.Lin, SS.Lin) %>%
+  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.08)
+
+```
+
+```{r gating sample 3b}
+
+fcm3B_gate_r1 <- Subset(fcm3B, gate_r1)
+
+fcm3B_gate_r1df <- data.frame(fcm3B_gate_r1@exprs)
+
+fig_gate_3B <- ggplot(data = fcm3Bdf, aes(x = FS.Lin, y = SS.Lin)) +
+  geom_point(alpha = 0.5) +
+  geom_point(data = fcm3B_gate_r1df, 
+             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+
+```
+
+```{r combined-plot-for-initial-gating, fig.cap='(ref:gated-population)'}
+
+ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, fig_gate_3A, labels = c("A", "B", "C"), cols = 3)
+
+```
+
+<!-- figure legend -->
+
+(ref:gated-population) **Flow Cytometry Analysis of RAW 264.7 cells (A-C): Forward-Scatter, Side-Scatter Plots of RAW 264.7 cells Unstimulated, Treated with 100 ng/ml LPS from *E.coli* and Treated with *E.coli* bacteria respectively.**
+
+<!-- end of figure legend -->
+
+```{r histogram plot}
+
+
 
 ```
 
