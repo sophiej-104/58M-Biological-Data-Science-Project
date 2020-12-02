@@ -211,14 +211,43 @@ colnames(matrix2B) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
 
 fcm2B_comp <- compensate(fcm2B, matrix2B)
 
+# As the spillover matrices are the same in each sample - can try and read in as a flowSet instead and apply over all at the same time (if time allows at the end)
+
 ```
 
 ```{r transforming the data}
 
+trans1A <- estimateLogicle(fcm1A_comp, colnames(fcm1A_comp[, 4:36]))
+fcm1A_comp_trans <- transform(fcm1A_comp, trans1A)
 
+trans1B <- estimateLogicle(fcm1B_comp, colnames(fcm1B_comp[, 4:36]))
+fcm1B_comp_trans <- transform(fcm1B_comp, trans1B)
+
+trans2A <- estimateLogicle(fcm2A_comp, colnames(fcm2A_comp[, 4:36]))
+fcm2A_comp_trans <- transform(fcm2A_comp, trans2A)
+
+trans2B <- estimateLogicle(fcm2B_comp, colnames(fcm2B_comp[, 4:36]))
+fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 ```
 
+```{r visualise data}
+
+autoplot(fcm1A_comp) # doesn't visualise very well without transformation
+autoplot(fcm1A_comp_trans)
+autoplot(fcm1B_comp_trans)
+autoplot(fcm2A_comp_trans)
+autoplot(fcm2B_comp_trans)
+
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+
+```
 
 # Results
 
