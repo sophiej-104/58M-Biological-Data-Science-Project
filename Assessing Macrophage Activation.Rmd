@@ -21,6 +21,8 @@ knitr::opts_chunk$set(echo = FALSE,
 library(tidyverse)
 library(ggplot2)
 library(flowCore)
+library(flowAI)
+library(ggcyto)
 ```
 
 <!-- Provide an introduction to the experiment, why it's important/it's application in context -->
@@ -142,56 +144,81 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 
 
 
-<!-- Sample Summaries: -->
-<!-- Sample 1: unstimulated cells kept in culture medium -->
-<!-- Sample 2: cells treated with 100 ng/ml LPS from E.coli -->
-<!-- Sample 3: mCherry fluorescent E.coli bacteria -->
-<!-- Samples marked A: use secondary antibody alone, without the addition of the primary antibody, as a control. -->
-<!-- Samples marked B: use both primary and secondary antibodies -->
+<!-- # **Sample 1** treated with Brefeldin A only (unstimulated) -->
+<!-- # 1A: not stained -->
+<!-- # 1B: stained for intracellular TNF production: detected with an anti-rabbit 488 (Green)# # -->
+
+<!-- **Sample 2** treated with Brefeldin A and red-fluorescent (rhodamine) bacteria (stimulated LPS treated) -->
+<!-- # 2A: not stained  -->
+<!-- # 2B: stained for intracellular TNF production: detected with an anti-rabbit 488 (Green) -->
 
 ```{r reading in the data}
-file1A <- "./data-raw/example-data/1A. Unstimulated Secondary alone.fcs"
+file1A <- "./data-raw/class-sample/class 1A.fcs"
 fcm1A <- read.FCS(file1A, alter.names = TRUE)
 
-file1B <- "./data-raw/example-data/1B. Unstimulated Primary and Secondary.fcs"
+file1B <- "./data-raw/class-sample/class 1B.fcs"
 fcm1B <- read.FCS(file1B, alter.names = TRUE)
 
-file2A <- "./data-raw/example-data/2A. LPS Secondary alone.fcs"
+file2A <- "./data-raw/class-sample/class 2A.fcs"
 fcm2A <- read.FCS(file2A, alter.names = TRUE)
 
-file2B <- "./data-raw/example-data/2B. LPS Primary and Secondary.fcs"
+file2B <- "./data-raw/class-sample/class 2B.fcs"
 fcm2B <- read.FCS(file2B, alter.names = TRUE)
 
-file3A <- "./data-raw/example-data/3A. mCherry+ Bacteria Secondary alone.fcs"
-fcm3A <- read.FCS(file3A, alter.names = TRUE)
+```
 
-file3B <- "./data-raw/example-data/3B. mCherry+ Bacteria Primary and Secondary.fcs"
-fcm3B <- read.FCS(file3B, alter.names = TRUE)
+```{r compensating the data}
+
+spillover(fcm1A) #exists in the $spillover keyword
+
+# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+
+matrix1A <- spillover(fcm1A)$`$SPILLOVER`
+matrix1A
+colnames(matrix1A) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
+
+fcm1A_comp <- compensate(fcm1A, matrix1A)
+
+# repeat for each file
+
+spillover(fcm1B) #exists in the $spillover keyword
+
+# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+
+matrix1B <- spillover(fcm1B)$`$SPILLOVER`
+matrix1B
+colnames(matrix1B) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
+
+fcm1B_comp <- compensate(fcm1B, matrix1B)
+
+spillover(fcm2A) #exists in the $spillover keyword
+
+# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+
+matrix2A <- spillover(fcm2A)$`$SPILLOVER`
+matrix2A
+colnames(matrix2A) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
+
+fcm2A_comp <- compensate(fcm2A, matrix2A)
+
+spillover(fcm2B) #exists in the $spillover keyword
+
+# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+
+matrix2B <- spillover(fcm2B)$`$SPILLOVER`
+matrix2B
+colnames(matrix2B) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
+
+fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 ```
 
+```{r transforming the data}
 
-```{r extracting the data into a dataframe}
 
-fcm1Adf <- data.frame(fcm1A@exprs)
-fcm1Bdf <- data.frame(fcm1B@exprs)
-fcm2Adf <- data.frame(fcm2A@exprs)
-fcm2Bdf <- data.frame(fcm2B@exprs)
-fcm3Adf <- data.frame(fcm3A@exprs)
-fcm3Bdf <- data.frame(fcm3B@exprs)
 
 ```
 
-```{r compensation, eval=FALSE, include=FALSE}
-
-fcsfiles <- list.files(pattern = "CytoTrol",
-system.file("extdata",
-package = "flowWorkspaceData"),
-full = TRUE)
-fs <- read.FCS(fcsfiles)
-x <- fs[[1]]
-
-```
 
 # Results
 
@@ -298,53 +325,10 @@ fig_gate_2B <- ggplot(data = fcm2Bdf, aes(x = FS.Lin, y = SS.Lin)) +
 
 ```
 
-```{r scatter plot of 3a, include=FALSE}
-
-fcm3Adf %>%
-  select(FS.Lin, SS.Lin) %>%
-  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.08)
-
-```
-
-```{r gating sample 3a}
-
-fcm3A_gate_r1 <- Subset(fcm3A, gate_r1)
-
-fcm3A_gate_r1df <- data.frame(fcm3A_gate_r1@exprs)
-
-fig_gate_3A <- ggplot(data = fcm3Adf, aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.5) +
-  geom_point(data = fcm3A_gate_r1df, 
-             aes(x = FS.Lin, y = SS.Lin), color = "red") 
-
-```
-
-```{r scatter plot of 3b, include=FALSE}
-
-fcm3Bdf %>%
-  select(FS.Lin, SS.Lin) %>%
-  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.08)
-
-```
-
-```{r gating sample 3b}
-
-fcm3B_gate_r1 <- Subset(fcm3B, gate_r1)
-
-fcm3B_gate_r1df <- data.frame(fcm3B_gate_r1@exprs)
-
-fig_gate_3B <- ggplot(data = fcm3Bdf, aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.5) +
-  geom_point(data = fcm3B_gate_r1df, 
-             aes(x = FS.Lin, y = SS.Lin), color = "red") 
-
-```
 
 ```{r combined-plot-for-initial-gating, fig.cap='(ref:gated-population)'}
 
-ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, fig_gate_3A, labels = c("A", "B", "C"), cols = 3)
+ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, labels = c("A", "B"), cols = 2)
 
 ```
 
