@@ -135,7 +135,7 @@ For an overview of the technique please see the video, [@Mitedustar2015-tp].
 knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 ```
 
-<!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor package flowCore -->
+<!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor packages flowCore etc. -->
 # Methods
 
 
@@ -155,16 +155,16 @@ The data contains two samples:
 2B: stained for intracellular TNF-$\alpha$ production, detected with an anti-rabbit 488 (Green)
 
 ```{r reading in the data}
-file1A <- "./data-raw/class-sample/class 1A.fcs"
+file1A <- "data-raw/class-sample/class 1A.fcs"
 fcm1A <- read.FCS(file1A, alter.names = TRUE) # alter.names argument 
 
-file1B <- "./data-raw/class-sample/class 1B.fcs"
+file1B <- "data-raw/class-sample/class 1B.fcs"
 fcm1B <- read.FCS(file1B, alter.names = TRUE)
 
-file2A <- "./data-raw/class-sample/class 2A.fcs"
+file2A <- "data-raw/class-sample/class 2A.fcs"
 fcm2A <- read.FCS(file2A, alter.names = TRUE)
 
-file2B <- "./data-raw/class-sample/class 2B.fcs"
+file2B <- "data-raw/class-sample/class 2B.fcs"
 fcm2B <- read.FCS(file2B, alter.names = TRUE)
 
 ```
@@ -227,17 +227,25 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 
 ```{r transforming the data}
+# library(data.table)
+# which(colnames(fcm1A_comp) %like% ".Log")
+# fcm1A_comp
 
-trans1A <- estimateLogicle(fcm1A_comp, colnames(fcm1A_comp[, 4:36]))
+trans1A <- estimateLogicle(fcm1A_comp, colnames(fcm1A_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
+                                                               19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
 fcm1A_comp_trans <- transform(fcm1A_comp, trans1A)
 
-trans1B <- estimateLogicle(fcm1B_comp, colnames(fcm1B_comp[, 4:36]))
+
+trans1B <- estimateLogicle(fcm1B_comp, colnames(fcm1B_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
+                                                               19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
 fcm1B_comp_trans <- transform(fcm1B_comp, trans1B)
 
-trans2A <- estimateLogicle(fcm2A_comp, colnames(fcm2A_comp[, 4:36]))
+trans2A <- estimateLogicle(fcm2A_comp, colnames(fcm2A_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
+                                                               19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
 fcm2A_comp_trans <- transform(fcm2A_comp, trans2A)
 
-trans2B <- estimateLogicle(fcm2B_comp, colnames(fcm2B_comp[, 4:36]))
+trans2B <- estimateLogicle(fcm2B_comp, colnames(fcm2B_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
+                                                               19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
 fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 ```
@@ -255,13 +263,13 @@ autoplot(fcm1B_comp_trans)
 autoplot(fcm2A_comp_trans)
 autoplot(fcm2B_comp_trans)
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
 ```
 
