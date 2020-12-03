@@ -139,22 +139,24 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 # Methods
 
 
-
 <!-- Link for Bioconductor How to guide: https://bioconductor.org/packages/devel/bioc/vignettes/flowCore/inst/doc/HowTo-flowCore.pdf -->
 
 
+# Data Import and Tidying
 
-<!-- # **Sample 1** treated with Brefeldin A only (unstimulated) -->
-<!-- # 1A: not stained -->
-<!-- # 1B: stained for intracellular TNF production: detected with an anti-rabbit 488 (Green)# # -->
+The data contains two samples:
 
-<!-- **Sample 2** treated with Brefeldin A and red-fluorescent (rhodamine) bacteria (stimulated LPS treated) -->
-<!-- # 2A: not stained  -->
-<!-- # 2B: stained for intracellular TNF production: detected with an anti-rabbit 488 (Green) -->
+**Sample 1:** treated with Brefeldin A only (Unstimulated)
+1A: not stained
+1B: stained for intracellular TNF-$\alpha$ production, detected with an anti-rabbit 488 (Green)
+
+**Sample 2:** treated with Brefeldin A and red-fluorescent (rhodamine) bacteria (Stimulated LPS Treated)
+2A: not stained 
+2B: stained for intracellular TNF-$\alpha$ production, detected with an anti-rabbit 488 (Green)
 
 ```{r reading in the data}
 file1A <- "./data-raw/class-sample/class 1A.fcs"
-fcm1A <- read.FCS(file1A, alter.names = TRUE)
+fcm1A <- read.FCS(file1A, alter.names = TRUE) # alter.names argument 
 
 file1B <- "./data-raw/class-sample/class 1B.fcs"
 fcm1B <- read.FCS(file1B, alter.names = TRUE)
@@ -167,9 +169,16 @@ fcm2B <- read.FCS(file2B, alter.names = TRUE)
 
 ```
 
-```{r compensating the data}
+# Compensation
 
-spillover(fcm1A) #exists in the $spillover keyword
+When using more than one fluorochrome is used, there is the possibility for their emission spectra to overlap. The overlap is often termed 'spillover' and this needs to be removed from the flow cytometry data through a process called compensation, [@ONeill2013-ub]. 
+
+```{r compensating the data, include=FALSE}
+
+# each FCS file should contain compensation data
+
+#Sample 1A
+spillover(fcm1A) #check to see which keyword the compensation data is under
 
 # names in spillover matrix don't match the flowFrame so need to change the matrix colnames
 
@@ -181,9 +190,8 @@ fcm1A_comp <- compensate(fcm1A, matrix1A)
 
 # repeat for each file
 
-spillover(fcm1B) #exists in the $spillover keyword
-
-# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+#Sample 1B
+spillover(fcm1B) 
 
 matrix1B <- spillover(fcm1B)$`$SPILLOVER`
 matrix1B
@@ -191,9 +199,8 @@ colnames(matrix1B) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
 
 fcm1B_comp <- compensate(fcm1B, matrix1B)
 
-spillover(fcm2A) #exists in the $spillover keyword
-
-# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+#Sample 2A
+spillover(fcm2A) 
 
 matrix2A <- spillover(fcm2A)$`$SPILLOVER`
 matrix2A
@@ -201,9 +208,8 @@ colnames(matrix2A) <- c("FL.1.Log", "FL.3.Log", "FL.4.Log")
 
 fcm2A_comp <- compensate(fcm2A, matrix2A)
 
-spillover(fcm2B) #exists in the $spillover keyword
-
-# names in spillover matrix don't match the flowFrame so need to change the matrix colnames
+#Sample 2B
+spillover(fcm2B)
 
 matrix2B <- spillover(fcm2B)$`$SPILLOVER`
 matrix2B
@@ -214,6 +220,11 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 # As the spillover matrices are the same in each sample - can try and read in as a flowSet instead and apply over all at the same time (if time allows at the end)
 
 ```
+
+# Transformation
+
+
+
 
 ```{r transforming the data}
 
@@ -231,125 +242,128 @@ fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 ```
 
+# Results
+
 ```{r visualise data}
 
-autoplot(fcm1A_comp) # doesn't visualise very well without transformation
+autoplot(fcm1A_comp)
+autoplot(fcm1B_comp)
+autoplot(fcm2A_comp)
+autoplot(fcm2B_comp) # doesn't visualise very well without transformation
 autoplot(fcm1A_comp_trans)
 autoplot(fcm1B_comp_trans)
 autoplot(fcm2A_comp_trans)
 autoplot(fcm2B_comp_trans)
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 256) + theme_bw()
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Area", y = "SS.Area")) + geom_hex(bins = 100) + theme_bw()
 
 ```
-
-# Results
 
 
 ```{r scatter plot of 1a, include=FALSE}
 
-fcm1Adf %>% 
-  select(FS.Lin, SS.Lin) %>% 
-  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.08)
+# fcm1Adf %>% 
+#   select(FS.Lin, SS.Lin) %>% 
+#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.08)
 
 ```
 
 ```{r creating a polygongate sample 1a}
 
-poly5 <- matrix(c(20000, 0,
-                  50000, 0,
-                  50000, 60000,
-                  20000, 60000), 
-                ncol = 2, 
-                nrow = 4, 
-                byrow = T)
-
-colnames(poly5) <- c("FS.Lin","SS.Lin")
-
-gate_r1 <- polygonGate(poly5, filterId = "gate_r1")
-
-
-fcm1A_gate_r1 <- Subset(fcm1A, gate_r1)
-
-fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
-
-fig_gate_1A <- ggplot(data = fcm1Adf, aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.5) +
-  geom_point(data = fcm1A_gate_r1df, 
-             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+# poly5 <- matrix(c(20000, 0,
+#                   50000, 0,
+#                   50000, 60000,
+#                   20000, 60000), 
+#                 ncol = 2, 
+#                 nrow = 4, 
+#                 byrow = T)
+# 
+# colnames(poly5) <- c("FS.Lin","SS.Lin")
+# 
+# gate_r1 <- polygonGate(poly5, filterId = "gate_r1")
+# 
+# 
+# fcm1A_gate_r1 <- Subset(fcm1A, gate_r1)
+# 
+# fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
+# 
+# fig_gate_1A <- ggplot(data = fcm1Adf, aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.5) +
+#   geom_point(data = fcm1A_gate_r1df, 
+#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
 
 ```
 
 ```{r scatter plot of 1b, include=FALSE}
 
-fcm1Bdf %>%
-  select(FS.Lin, SS.Lin) %>%
-  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.08)
+# fcm1Bdf %>%
+#   select(FS.Lin, SS.Lin) %>%
+#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.08)
 
 ```
 
 ```{r gating sample 1b}
 
-fcm1B_gate_r1 <- Subset(fcm1B, gate_r1)
-
-fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
-
-fig_gate_1B <- ggplot(data = fcm1Bdf, aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.5) +
-  geom_point(data = fcm1B_gate_r1df, 
-             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+# fcm1B_gate_r1 <- Subset(fcm1B, gate_r1)
+# 
+# fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
+# 
+# fig_gate_1B <- ggplot(data = fcm1Bdf, aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.5) +
+#   geom_point(data = fcm1B_gate_r1df, 
+#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
 
 ```
 
 ```{r scatter plot of 2a, include=FALSE}
 
-fcm2Adf %>%
-  select(FS.Lin, SS.Lin) %>%
-  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.08)
+# fcm2Adf %>%
+#   select(FS.Lin, SS.Lin) %>%
+#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.08)
 
 ```
 
 ```{r gating sample 2a}
 
-fcm2A_gate_r1 <- Subset(fcm2A, gate_r1)
-
-fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
-
-fig_gate_2A <- ggplot(data = fcm2Adf, aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.5) +
-  geom_point(data = fcm2A_gate_r1df, 
-             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+# fcm2A_gate_r1 <- Subset(fcm2A, gate_r1)
+# 
+# fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
+# 
+# fig_gate_2A <- ggplot(data = fcm2Adf, aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.5) +
+#   geom_point(data = fcm2A_gate_r1df, 
+#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
 
 ```
 
 ```{r scatter plot of 2b, include=FALSE}
 
-fcm2Bdf %>%
-  select(FS.Lin, SS.Lin) %>%
-  ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.08)
+# fcm2Bdf %>%
+#   select(FS.Lin, SS.Lin) %>%
+#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.08)
 
 ```
 
 ```{r gating sample 2b}
 
-fcm2B_gate_r1 <- Subset(fcm2B, gate_r1)
-
-fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
-
-fig_gate_2B <- ggplot(data = fcm2Bdf, aes(x = FS.Lin, y = SS.Lin)) +
-  geom_point(alpha = 0.5) +
-  geom_point(data = fcm2B_gate_r1df, 
-             aes(x = FS.Lin, y = SS.Lin), color = "red") 
+# fcm2B_gate_r1 <- Subset(fcm2B, gate_r1)
+# 
+# fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
+# 
+# fig_gate_2B <- ggplot(data = fcm2Bdf, aes(x = FS.Lin, y = SS.Lin)) +
+#   geom_point(alpha = 0.5) +
+#   geom_point(data = fcm2B_gate_r1df, 
+#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
 
 
 ```
@@ -357,7 +371,7 @@ fig_gate_2B <- ggplot(data = fcm2Bdf, aes(x = FS.Lin, y = SS.Lin)) +
 
 ```{r combined-plot-for-initial-gating, fig.cap='(ref:gated-population)'}
 
-ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, labels = c("A", "B"), cols = 2)
+#ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, labels = c("A", "B"), cols = 2)
 
 ```
 
@@ -372,6 +386,14 @@ ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, labels = c("A", "B"), cols = 2)
 
 
 ```
+
+
+```{r word count}
+
+
+
+```
+
 
 # References
 
