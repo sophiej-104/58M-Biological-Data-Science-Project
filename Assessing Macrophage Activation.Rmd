@@ -61,7 +61,7 @@ knitr::include_graphics("images/Western Blot New.png")
 
 <!-- end of figure legend -->
 
-```{r calculating Rf value, include=FALSE}
+```{r calculating Rf value, echo=FALSE}
 Rf <- read.csv("data-raw/Western Blot.csv")
 
 ggplot(Rf, aes(Rf.Value, Log.of.Molecular.Weight..Da.)) +
@@ -75,10 +75,12 @@ ggplot(Rf, aes(Rf.Value, Log.of.Molecular.Weight..Da.)) +
   geom_smooth(method = "lm")
 
 str(Rf)
+
 #points(x = 0.6, y = 4.4516, col="red")
   
 model <- lm(Log.of.Molecular.Weight..Da. ~ Rf.Value, data = Rf)
 model
+
 ```
 
 
@@ -225,7 +227,6 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 
 
-
 ```{r transforming the data}
 # library(data.table)
 # which(colnames(fcm1A_comp) %like% ".Log")
@@ -254,7 +255,7 @@ fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 # Results
 
-```{r visualise data}
+```{r visualise transformed data}
 
 autoplot(fcm1A_comp)
 autoplot(fcm1B_comp)
@@ -264,6 +265,10 @@ autoplot(fcm1A_comp_trans)
 autoplot(fcm1B_comp_trans)
 autoplot(fcm2A_comp_trans)
 autoplot(fcm2B_comp_trans)
+
+```
+
+```{r plot log channel data}
 
 ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
@@ -275,6 +280,17 @@ ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100)
 
 ```
 
+```{r plot logicle transformed data}
+
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+
+```
 
 ```{r scatter plot of 1a, include=FALSE}
 
