@@ -39,7 +39,7 @@ The aim of this study is to gain understanding of the mechanisms by which macrop
 
 <!-- Decide whether to include the images and results from the western blot analysis of own results -->
 <!-- This could allow me to show import of image  -->
-# Is phagocytosis required to trigger the production of TNF-$\alpha$ by mcrophages? 
+# Is phagocytosis required to trigger the production of TNF-$\alpha$ by macrophages? 
 
 The TNF-$\alpha$ production from RAW 264.7 cells is shown in Figures \@ref(fig:western-blot-figure) and \@ref(fig:Rf-figure). Membranes from the SDS-PAGE were incubated with the primary antibody solution, rabbit anti-TNF-$\alpha$ in TBS-T with 5% milk, and consequently incubated with the secondary antibody solution, goat anti-rabbit IgG-linked to horseradish peroxidase in PBS-T in milk. 
 
@@ -61,7 +61,7 @@ knitr::include_graphics("images/Western Blot New.png")
 
 <!-- end of figure legend -->
 
-```{r calculating Rf value, echo=FALSE}
+```{r calculating Rf value, include=FALSE}
 Rf <- read.csv("data-raw/Western Blot.csv")
 
 ggplot(Rf, aes(Rf.Value, Log.of.Molecular.Weight..Da.)) +
@@ -171,7 +171,7 @@ fcm2B <- read.FCS(file2B, alter.names = TRUE)
 
 ```
 
-# Compensation
+## Compensation
 
 When using more than one fluorochrome is used, there is the possibility for their emission spectra to overlap. The overlap is often termed 'spillover' and this needs to be removed from the flow cytometry data through a process called compensation, [@ONeill2013-ub]. 
 
@@ -223,7 +223,7 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 ```
 
-# Transformation
+## Transformation
 
 
 
@@ -253,9 +253,9 @@ fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 ```
 
-# Results
+## Initial Visualisation
 
-```{r visualise transformed data}
+```{r visualise transformed data, include=FALSE}
 
 autoplot(fcm1A_comp)
 autoplot(fcm1B_comp)
@@ -268,29 +268,48 @@ autoplot(fcm2B_comp_trans)
 
 ```
 
+## Comparing Log vs Logicle Transformation
+
+### Log Channel FS vs SS Plots
+
 ```{r plot log channel data}
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+
+# find a way of plotting all four together
 
 ```
+
+### Logicle FS vs SS Plots
 
 ```{r plot logicle transformed data}
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+
+# find a way to plot all four together
 
 ```
+
+## Gating the Samples 
+
+```{r setting the initial gating regions}
+
+
+
+```
+
 
 ```{r scatter plot of 1a, include=FALSE}
 
@@ -416,7 +435,7 @@ ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100)
 
 ```{r word count}
 
-
+#count_words("Assessing Macrophage Activation.Rmd")
 
 ```
 
