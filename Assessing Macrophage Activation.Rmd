@@ -313,7 +313,7 @@ logicle_2B
 
 ## Gating the Samples 
 
-```{r setting the initial gating regions for log data}
+```{r setting the initial gating regions for log data, fig.show="hold", out.width="50%"}
 
 # creating a matrix for the 1a sample
 
@@ -355,7 +355,7 @@ fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
 
 ```
 
-```{r setting the initial gating regions for logicle data}
+```{r setting the initial gating regions for logicle data, fig.show="hold", out.width="50%"}
 
 poly_logicle <- matrix(c(3.5, 2.5,                  
                   3.5, 4.5,
@@ -395,7 +395,7 @@ fcm2B_gate_r2df <- data.frame(fcm2B_gate_r2@exprs)
 
 ```
 
-<!-- Need to create a table of summary information for the cell counts etc. for the gated samples -->
+
 
 ```{r histogram plot}
 
