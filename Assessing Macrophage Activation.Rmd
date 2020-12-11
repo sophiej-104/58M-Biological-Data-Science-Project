@@ -333,22 +333,22 @@ gate_r1 <- polygonGate(poly_log, filterId = "gate_r1")
 
 # plotting samples with gating
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
 
 fcm1A_gate_r1 <- Subset(fcm1A_comp_trans, gate_r1)
 fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
 
 fcm1B_gate_r1 <- Subset(fcm1B_comp_trans, gate_r1)
 fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
 
 fcm2A_gate_r1 <- Subset(fcm2A_comp_trans, gate_r1)
 fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
 
 fcm2B_gate_r1 <- Subset(fcm2B_comp_trans, gate_r1)
 fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
@@ -373,27 +373,29 @@ gate_r2 <- polygonGate(poly_logicle, filterId = "gate_r2")
 
 # plotting samples with gating
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
 
 fcm1A_gate_r2 <- Subset(fcm1A_comp_trans, gate_r2)
 fcm1A_gate_r2df <- data.frame(fcm1A_gate_r2@exprs)
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
 
 fcm1B_gate_r2 <- Subset(fcm1B_comp_trans, gate_r2)
 fcm1B_gate_r2df <- data.frame(fcm1B_gate_r2@exprs)
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
 
 fcm2A_gate_r2 <- Subset(fcm2A_comp_trans, gate_r2)
 fcm2A_gate_r2df <- data.frame(fcm2A_gate_r2@exprs)
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
 
 fcm2B_gate_r2 <- Subset(fcm2B_comp_trans, gate_r2)
 fcm2B_gate_r2df <- data.frame(fcm2B_gate_r2@exprs)
 
 ```
+
+<!-- Need to create a table of summary information for the cell counts etc. for the gated samples -->
 
 ```{r histogram plot}
 
