@@ -273,15 +273,19 @@ autoplot(fcm2B_comp_trans)
 
 ### Log Channel FS vs SS Plots
 
-```{r plot log channel data}
+```{r plot log channel data, include=FALSE}
 
 log_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_1A
 
 log_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_1B
 
 log_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_2A
 
 log_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
+log_2B
 
 # find a way of plotting all four together
 
@@ -289,15 +293,19 @@ log_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(b
 
 ### Logicle FS vs SS Plots
 
-```{r plot logicle transformed data}
+```{r plot logicle transformed data, include=FALSE}
 
 logicle_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_1A
 
 logicle_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_1B
 
 logicle_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_2A
 
 logicle_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
+logicle_2B
 
 # find a way to plot all four together
 
@@ -305,127 +313,87 @@ logicle_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_h
 
 ## Gating the Samples 
 
-```{r setting the initial gating regions}
+```{r setting the initial gating regions for log data}
 
+# creating a matrix for the 1a sample
 
+poly_log <- matrix(c(1250, 0,                  
+                  5000, 0,
+                  5000, 5000,
+                  1250, 5000), 
+                ncol = 2, 
+                nrow = 4, 
+                byrow = T)
 
-```
+colnames(poly_log) <- c("FS.Log","SS.Log")
 
+# creating polygongate
 
-```{r scatter plot of 1a, include=FALSE}
+gate_r1 <- polygonGate(poly_log, filterId = "gate_r1")
 
-# fcm1Adf %>% 
-#   select(FS.Lin, SS.Lin) %>% 
-#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.08)
+# plotting samples with gating
 
-```
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
 
-```{r creating a polygongate sample 1a}
+fcm1A_gate_r1 <- Subset(fcm1A_comp_trans, gate_r1)
+fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
 
-# poly5 <- matrix(c(20000, 0,
-#                   50000, 0,
-#                   50000, 60000,
-#                   20000, 60000), 
-#                 ncol = 2, 
-#                 nrow = 4, 
-#                 byrow = T)
-# 
-# colnames(poly5) <- c("FS.Lin","SS.Lin")
-# 
-# gate_r1 <- polygonGate(poly5, filterId = "gate_r1")
-# 
-# 
-# fcm1A_gate_r1 <- Subset(fcm1A, gate_r1)
-# 
-# fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
-# 
-# fig_gate_1A <- ggplot(data = fcm1Adf, aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.5) +
-#   geom_point(data = fcm1A_gate_r1df, 
-#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
 
-```
+fcm1B_gate_r1 <- Subset(fcm1B_comp_trans, gate_r1)
+fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
 
-```{r scatter plot of 1b, include=FALSE}
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
 
-# fcm1Bdf %>%
-#   select(FS.Lin, SS.Lin) %>%
-#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.08)
+fcm2A_gate_r1 <- Subset(fcm2A_comp_trans, gate_r1)
+fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
+
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1)
+
+fcm2B_gate_r1 <- Subset(fcm2B_comp_trans, gate_r1)
+fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
 
 ```
 
-```{r gating sample 1b}
+```{r setting the initial gating regions for logicle data}
 
-# fcm1B_gate_r1 <- Subset(fcm1B, gate_r1)
-# 
-# fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
-# 
-# fig_gate_1B <- ggplot(data = fcm1Bdf, aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.5) +
-#   geom_point(data = fcm1B_gate_r1df, 
-#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
+poly_logicle <- matrix(c(3.5, 2.5,                  
+                  3.5, 4.5,
+                  4.5, 4.5,
+                  4.5, 2.5), 
+                ncol = 2, 
+                nrow = 4, 
+                byrow = T)
 
-```
+colnames(poly_logicle) <- c("FS.Lin","SS.Lin")
 
-```{r scatter plot of 2a, include=FALSE}
+# creating polygongate
 
-# fcm2Adf %>%
-#   select(FS.Lin, SS.Lin) %>%
-#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.08)
+gate_r2 <- polygonGate(poly_logicle, filterId = "gate_r2")
 
-```
+# plotting samples with gating
 
-```{r gating sample 2a}
+ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
 
-# fcm2A_gate_r1 <- Subset(fcm2A, gate_r1)
-# 
-# fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
-# 
-# fig_gate_2A <- ggplot(data = fcm2Adf, aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.5) +
-#   geom_point(data = fcm2A_gate_r1df, 
-#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
+fcm1A_gate_r2 <- Subset(fcm1A_comp_trans, gate_r2)
+fcm1A_gate_r2df <- data.frame(fcm1A_gate_r2@exprs)
 
-```
+ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
 
-```{r scatter plot of 2b, include=FALSE}
+fcm1B_gate_r2 <- Subset(fcm1B_comp_trans, gate_r2)
+fcm1B_gate_r2df <- data.frame(fcm1B_gate_r2@exprs)
 
-# fcm2Bdf %>%
-#   select(FS.Lin, SS.Lin) %>%
-#   ggplot(aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.08)
+ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
+
+fcm2A_gate_r2 <- Subset(fcm2A_comp_trans, gate_r2)
+fcm2A_gate_r2df <- data.frame(fcm2A_gate_r2@exprs)
+
+ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2)
+
+fcm2B_gate_r2 <- Subset(fcm2B_comp_trans, gate_r2)
+fcm2B_gate_r2df <- data.frame(fcm2B_gate_r2@exprs)
 
 ```
-
-```{r gating sample 2b}
-
-# fcm2B_gate_r1 <- Subset(fcm2B, gate_r1)
-# 
-# fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
-# 
-# fig_gate_2B <- ggplot(data = fcm2Bdf, aes(x = FS.Lin, y = SS.Lin)) +
-#   geom_point(alpha = 0.5) +
-#   geom_point(data = fcm2B_gate_r1df, 
-#              aes(x = FS.Lin, y = SS.Lin), color = "red") 
-
-
-```
-
-
-```{r combined-plot-for-initial-gating, fig.cap='(ref:gated-population)'}
-
-#ggpubr::ggarrange(fig_gate_1A, fig_gate_2A, labels = c("A", "B"), cols = 2)
-
-```
-
-<!-- figure legend -->
-
-(ref:gated-population) **Flow Cytometry Analysis of RAW 264.7 cells (A-C): Forward-Scatter, Side-Scatter Plots of RAW 264.7 cells Unstimulated, Treated with 100 ng/ml LPS from *E.coli* and Treated with *E.coli* bacteria respectively.**
-
-<!-- end of figure legend -->
 
 ```{r histogram plot}
 
