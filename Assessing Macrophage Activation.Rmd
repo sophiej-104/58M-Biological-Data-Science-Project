@@ -1,6 +1,6 @@
 ---
 title: "Assessing Macrophage Activation and Response to Bacterial Infection *in vitro*"
-author: "Sophie Davies"
+author: "Examination Number: Y3856686"
 date: "`r format(Sys.time(), '%B, %Y')`"
 output: 
   bookdown::html_document2:
@@ -421,9 +421,9 @@ word_count <- wordcountaddin::word_count("Assessing Macrophage Activation.Rmd")
 
 ```
 
-## Word Count 
+# Word Count 
 
-Word count calculated using [@NA]. 
+Word count calculated using [@Marwick]. 
 
 **Word Count:** `r word_count`
 
