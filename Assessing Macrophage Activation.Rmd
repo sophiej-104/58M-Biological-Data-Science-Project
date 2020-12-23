@@ -409,20 +409,23 @@ ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_
 ```
 
 
-
 ```{r histogram plot}
 
 
 
 ```
 
-
 ```{r word count}
 
-#count_words("Assessing Macrophage Activation.Rmd")
+word_count <- wordcountaddin::word_count("Assessing Macrophage Activation.Rmd")
 
 ```
 
+## Word Count 
+
+Word count calculated using [@NA]. 
+
+**Word Count:** `r word_count`
 
 # References
 
