@@ -273,47 +273,48 @@ autoplot(fcm2B_comp_trans)
 
 ### Log Channel FS vs SS Plots
 
-```{r plot log channel data, include=FALSE}
+```{r plot log channel data, out.width="100%"}
 
 log_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_1A
+log_1A <- as.ggplot(log_1A)
 
 log_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_1B
+log_1B <- as.ggplot(log_1B)
 
 log_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_2A
+log_2A <- as.ggplot(log_2A)
 
 log_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_2B
+log_2B <- as.ggplot(log_2B)
 
-# find a way of plotting all four together
+ggpubr::ggarrange(log_1A, log_1B, log_2A, log_2B)
 
 ```
 
 ### Logicle FS vs SS Plots
 
-```{r plot logicle transformed data, include=FALSE}
+```{r plot logicle transformed data, out.width="100%"}
 
 logicle_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_1A
+logicle_1A <- as.ggplot(logicle_1A) #converting to a ggplot so all four plots can be shown together using ggarrange
 
 logicle_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_1B
+logicle_1B <- as.ggplot(logicle_1B)
 
 logicle_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_2A
+logicle_2A <- as.ggplot(logicle_2A)
 
 logicle_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_2B
+logicle_2B <- as.ggplot(logicle_2B)
 
-# find a way to plot all four together
+ggpubr::ggarrange(logicle_1A, logicle_1B, logicle_2A, logicle_2B) #plotting the four plots together
+
 
 ```
 
 ## Gating the Samples 
 
-```{r setting the initial gating regions for log data, fig.show="hold", out.width="50%"}
+```{r setting the initial gating regions for log data, out.width="100%"}
 
 # creating a matrix for the 1a sample
 
@@ -333,29 +334,35 @@ gate_r1 <- polygonGate(poly_log, filterId = "gate_r1")
 
 # plotting samples with gating
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_1A_gate <- as.ggplot(log_1A_gate)
 
 fcm1A_gate_r1 <- Subset(fcm1A_comp_trans, gate_r1)
 fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_1B_gate <- as.ggplot(log_1B_gate)
 
 fcm1B_gate_r1 <- Subset(fcm1B_comp_trans, gate_r1)
 fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_2A_gate <- as.ggplot(log_2A_gate)
 
 fcm2A_gate_r1 <- Subset(fcm2A_comp_trans, gate_r1)
 fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_2B_gate <- as.ggplot(log_2B_gate)
 
 fcm2B_gate_r1 <- Subset(fcm2B_comp_trans, gate_r1)
 fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
 
+ggpubr::ggarrange(log_1A_gate, log_1B_gate, log_2A_gate, log_2B_gate)
+
 ```
 
-```{r setting the initial gating regions for logicle data, fig.show="hold", out.width="50%"}
+```{r setting the initial gating regions for logicle data, out.width="100%"}
 
 poly_logicle <- matrix(c(3.5, 2.5,                  
                   3.5, 4.5,
@@ -373,25 +380,31 @@ gate_r2 <- polygonGate(poly_logicle, filterId = "gate_r2")
 
 # plotting samples with gating
 
-ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_1A_gate <- as.ggplot(logicle_1A_gate)
 
 fcm1A_gate_r2 <- Subset(fcm1A_comp_trans, gate_r2)
 fcm1A_gate_r2df <- data.frame(fcm1A_gate_r2@exprs)
 
-ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_1B_gate <- as.ggplot(logicle_1B_gate)
 
 fcm1B_gate_r2 <- Subset(fcm1B_comp_trans, gate_r2)
 fcm1B_gate_r2df <- data.frame(fcm1B_gate_r2@exprs)
 
-ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_2A_gate <- as.ggplot(logicle_2A_gate)
 
 fcm2A_gate_r2 <- Subset(fcm2A_comp_trans, gate_r2)
 fcm2A_gate_r2df <- data.frame(fcm2A_gate_r2@exprs)
 
-ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
+logicle_2B_gate <- as.ggplot(logicle_2B_gate)
 
 fcm2B_gate_r2 <- Subset(fcm2B_comp_trans, gate_r2)
 fcm2B_gate_r2df <- data.frame(fcm2B_gate_r2@exprs)
+
+ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_gate)
 
 ```
 
