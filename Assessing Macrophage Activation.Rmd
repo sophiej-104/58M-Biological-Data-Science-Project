@@ -226,12 +226,9 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 ## Transformation
 
-
+This step is carried out in order to visualise the data more easily as many of the channels are not in a log format, the code here transforms the data into a "logicle" format. 
 
 ```{r transforming the data}
-# library(data.table)
-# which(colnames(fcm1A_comp) %like% ".Log")
-# fcm1A_comp
 
 trans1A <- estimateLogicle(fcm1A_comp, colnames(fcm1A_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
                                                                19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
@@ -313,6 +310,8 @@ ggpubr::ggarrange(logicle_1A, logicle_1B, logicle_2A, logicle_2B) #plotting the 
 ```
 
 ## Gating the Samples 
+
+
 
 ```{r setting the initial gating regions for log data, out.width="100%"}
 
@@ -409,9 +408,37 @@ ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_
 ```
 
 
-```{r histogram plot}
+```{r initial-figure}
 
+# combining the two datasets that will be plotted together 
+# first make new column so they can be distinguished from each other for plot
 
+fcm1A_gate_r1df$staining <- 'nostain'
+fcm1B_gate_r1df$staining <- 'stained'
+
+fcm1_gate_dfplot <- rbind(fcm1A_gate_r1df, fcm1B_gate_r1df)
+
+hist_log_1 <- ggplot(fcm1_gate_dfplot, aes(x = FL.1.Log, fill = staining)) + geom_histogram(aes(y = ..count..), alpha= 0.5, position = 'identity') + scale_x_log10() +
+  ylab("Count") +
+  xlab("FITC Log") +
+  scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+hist_log_1
+
+fcm2A_gate_r1df$staining <- 'nostain'
+fcm2B_gate_r1df$staining <- 'stained'
+
+fcm2_gate_dfplot <- rbind(fcm2A_gate_r1df, fcm2B_gate_r1df)
+
+hist_log_2 <- ggplot(fcm2_gate_dfplot, aes(x = FL.1.Log, fill = staining)) + geom_histogram(aes(y = ..count..), alpha= 0.5, position = 'identity') + scale_x_log10() +
+  ylab("Count") +
+  xlab("FITC Log") +
+  scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+hist_log_2
+
+TNFalpha_detection <- ggpubr::ggarrange(log_1A_gate, hist_log_1, hist_log_2, labels = "AUTO")
+TNFalpha_detection
+
+ggsave("figures/Detection_of_TNFalpha.png", TNFalpha_detection)
 
 ```
 
