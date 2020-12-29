@@ -408,7 +408,7 @@ ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_
 ```
 
 
-```{r initial-figure}
+```{r log histograms, out.width="100%"}
 
 #setting up gating region
 
@@ -425,36 +425,36 @@ gate_r3 <- rectangleGate(poly_FITC, filterId = "gate_r3")
 hist_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats()
+  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_1A <- as.ggplot(hist_log_1A)
-hist_log_1A
+
 
 hist_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats()
+  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_1B <- as.ggplot(hist_log_1B)
-hist_log_1B
+
 
 # scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
 
 hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats()
+  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_2A <- as.ggplot(hist_log_2A)
-hist_log_2A
+
 
 hist_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats()
+  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_2B <- as.ggplot(hist_log_2B)
-hist_log_2B
+
 
 TNFalpha_detection <- ggpubr::ggarrange(log_1A_gate, hist_log_1A, hist_log_1B, hist_log_2A, hist_log_2B, labels = "AUTO")
 TNFalpha_detection
@@ -463,11 +463,55 @@ ggsave("figures/Detection_of_TNFalpha.png", TNFalpha_detection)
 
 ```
 
-```{r ggcyto trial}
+```{r logicle histograms, out.width="100%"}
+
+#setting up gating region
+
+poly_FITC_logicle <- matrix(c(2.25, Inf,                  
+                  Inf, Inf), 
+                ncol = 1, 
+                nrow = 2, 
+                byrow = T)
+
+colnames(poly_FITC_logicle) <- c("FL.1.Lin")
+gate_r4 <- rectangleGate(poly_FITC_logicle, filterId = "gate_r4")
 
 
+hist_logicle_1A <- ggcyto(fcm1A_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
+  ylab("Count") +
+  xlab("FITC Lin") +
+  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
+
+hist_logicle_1A <- as.ggplot(hist_logicle_1A)
 
 
+hist_logicle_1B <- ggcyto(fcm1B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
+  ylab("Count") +
+  xlab("FITC Lin") +
+  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
+
+hist_logicle_1B <- as.ggplot(hist_logicle_1B)
+
+# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+
+hist_logicle_2A <- ggcyto(fcm2A_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
+  ylab("Count") +
+  xlab("FITC Lin") +
+  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
+
+hist_logicle_2A <- as.ggplot(hist_logicle_2A)
+
+hist_logicle_2B <- ggcyto(fcm2B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
+  ylab("Count") +
+  xlab("FITC Lin") +
+  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
+
+hist_logicle_2B <- as.ggplot(hist_logicle_2B)
+
+TNFalpha_detection_logicle <- ggpubr::ggarrange(logicle_1A_gate, hist_logicle_1A, hist_logicle_1B, hist_logicle_2A, hist_logicle_2B, labels = "AUTO")
+TNFalpha_detection_logicle
+
+ggsave("figures/Detection_of_TNFalpha_logicle.png", TNFalpha_detection_logicle)
 
 ```
 
