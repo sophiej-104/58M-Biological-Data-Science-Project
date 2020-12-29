@@ -410,35 +410,64 @@ ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_
 
 ```{r initial-figure}
 
-# combining the two datasets that will be plotted together 
-# first make new column so they can be distinguished from each other for plot
+#setting up gating region
 
-fcm1A_gate_r1df$staining <- 'nostain'
-fcm1B_gate_r1df$staining <- 'stained'
+poly_FITC <- matrix(c(100, Inf,                  
+                  Inf, Inf), 
+                ncol = 1, 
+                nrow = 2, 
+                byrow = T)
 
-fcm1_gate_dfplot <- rbind(fcm1A_gate_r1df, fcm1B_gate_r1df)
+colnames(poly_FITC) <- c("FL.1.Log")
+gate_r3 <- rectangleGate(poly_FITC, filterId = "gate_r3")
 
-hist_log_1 <- ggplot(fcm1_gate_dfplot, aes(x = FL.1.Log, fill = staining)) + geom_histogram(aes(y = ..count..), alpha= 0.5, position = 'identity') + scale_x_log10() +
+
+hist_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
-hist_log_1
+  theme_bw() + geom_gate(gate_r3) + geom_stats()
 
-fcm2A_gate_r1df$staining <- 'nostain'
-fcm2B_gate_r1df$staining <- 'stained'
+hist_log_1A <- as.ggplot(hist_log_1A)
+hist_log_1A
 
-fcm2_gate_dfplot <- rbind(fcm2A_gate_r1df, fcm2B_gate_r1df)
-
-hist_log_2 <- ggplot(fcm2_gate_dfplot, aes(x = FL.1.Log, fill = staining)) + geom_histogram(aes(y = ..count..), alpha= 0.5, position = 'identity') + scale_x_log10() +
+hist_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
-hist_log_2
+  theme_bw() + geom_gate(gate_r3) + geom_stats()
 
-TNFalpha_detection <- ggpubr::ggarrange(log_1A_gate, hist_log_1, hist_log_2, labels = "AUTO")
+hist_log_1B <- as.ggplot(hist_log_1B)
+hist_log_1B
+
+# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+
+hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
+  ylab("Count") +
+  xlab("FITC Log") +
+  theme_bw() + geom_gate(gate_r3) + geom_stats()
+
+hist_log_2A <- as.ggplot(hist_log_2A)
+hist_log_2A
+
+hist_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
+  ylab("Count") +
+  xlab("FITC Log") +
+  theme_bw() + geom_gate(gate_r3) + geom_stats()
+
+hist_log_2B <- as.ggplot(hist_log_2B)
+hist_log_2B
+
+TNFalpha_detection <- ggpubr::ggarrange(log_1A_gate, hist_log_1A, hist_log_1B, hist_log_2A, hist_log_2B, labels = "AUTO")
 TNFalpha_detection
 
 ggsave("figures/Detection_of_TNFalpha.png", TNFalpha_detection)
+
+```
+
+```{r ggcyto trial}
+
+
+
+
 
 ```
 
