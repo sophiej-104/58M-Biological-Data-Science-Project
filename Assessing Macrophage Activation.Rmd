@@ -429,7 +429,6 @@ hist_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + sca
 
 hist_log_1A <- as.ggplot(hist_log_1A)
 
-
 hist_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
@@ -443,7 +442,7 @@ hist_log_1B <- as.ggplot(hist_log_1B)
 hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5, type)
 
 hist_log_2A <- as.ggplot(hist_log_2A)
 
@@ -460,6 +459,40 @@ TNFalpha_detection <- ggpubr::ggarrange(log_1A_gate, hist_log_1A, hist_log_1B, h
 TNFalpha_detection
 
 ggsave("figures/Detection_of_TNFalpha.png", TNFalpha_detection)
+
+```
+
+
+```{r summary table log, out.width="100%"}
+
+cell_count_1A <- nrow(fcm1A_gate_r1) 
+cell_count_1B <- nrow(fcm1B_gate_r1)
+cell_count_2A <- nrow(fcm2A_gate_r1)
+cell_count_2B <- nrow(fcm2B_gate_r1)
+
+fcm1A_summary <- summary(fcm1A_gate_r1) 
+mean_fcm1A <- fcm1A_summary[4, 12]
+fcm1A_summary <- as.data.frame(fcm1A_summary[3, 12]) %>% mutate(., Mean = mean_fcm1A) %>%
+  mutate(., Cell_Count = cell_count_1A) %>% rename(Median = `fcm1A_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
+fcm1B_summary <- summary(fcm1B_gate_r1) 
+mean_fcm1B <- fcm1B_summary[4, 12]
+fcm1B_summary <- as.data.frame(fcm1B_summary[3, 12]) %>% mutate(., Mean = mean_fcm1B) %>%
+  mutate(., Cell_Count = cell_count_1B) %>% rename(Median = `fcm1B_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+")
+fcm2A_summary <- summary(fcm2A_gate_r1)
+mean_fcm2A <- fcm2A_summary[4, 12]
+fcm2A_summary <- as.data.frame(fcm2A_summary[3, 12]) %>% mutate(., Mean = mean_fcm2A) %>%
+  mutate(., Cell_Count = cell_count_2A) %>% rename(Median = `fcm2A_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-")
+fcm2B_summary <- summary(fcm2B_gate_r1)
+mean_fcm2B <- fcm2B_summary[4, 12]
+fcm2B_summary <- as.data.frame(fcm2B_summary[3, 12]) %>% mutate(., Mean = mean_fcm2B) %>%
+  mutate(., Cell_Count = cell_count_2B) %>% rename(Median = `fcm2B_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+")
+
+log_summary <- rbind(fcm1A_summary, fcm1B_summary, fcm2A_summary, fcm2B_summary)
+log_summary <- log_summary[, c(4, 5, 3, 2, 1)]
+
+knitr::kable(log_summary)
+
+#still need to find a way of extracting the positive cells for TNF-alpha (also using special characters in tables)
 
 ```
 
