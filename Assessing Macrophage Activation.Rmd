@@ -22,7 +22,6 @@ knitr::opts_chunk$set(echo = FALSE,
 library(tidyverse)
 library(ggplot2)
 library(flowCore)
-library(flowAI)
 library(ggcyto)
 ```
 
@@ -442,7 +441,7 @@ hist_log_1B <- as.ggplot(hist_log_1B)
 hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5, type)
+  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_2A <- as.ggplot(hist_log_2A)
 
@@ -490,7 +489,7 @@ fcm2B_summary <- as.data.frame(fcm2B_summary[3, 12]) %>% mutate(., Mean = mean_f
 log_summary <- rbind(fcm1A_summary, fcm1B_summary, fcm2A_summary, fcm2B_summary)
 log_summary <- log_summary[, c(4, 5, 3, 2, 1)]
 
-knitr::kable(log_summary)
+knitr::kable(log_summary) 
 
 #still need to find a way of extracting the positive cells for TNF-alpha (also using special characters in tables)
 
@@ -547,6 +546,39 @@ TNFalpha_detection_logicle
 ggsave("figures/Detection_of_TNFalpha_logicle.png", TNFalpha_detection_logicle)
 
 ```
+
+```{r summary table logicle, out.width="100%"}
+
+cell_count_1A_logicle <- nrow(fcm1A_gate_r2) 
+cell_count_1B_logicle <- nrow(fcm1B_gate_r2)
+cell_count_2A_logicle <- nrow(fcm2A_gate_r2)
+cell_count_2B_logicle <- nrow(fcm2B_gate_r2)
+
+fcm1A_summary_logicle <- summary(fcm1A_gate_r2) 
+mean_fcm1A_logicle <- fcm1A_summary_logicle[4, 10]
+fcm1A_summary_logicle <- as.data.frame(fcm1A_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm1A_logicle) %>%
+  mutate(., Cell_Count = cell_count_1A_logicle) %>% rename(Median = `fcm1A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
+fcm1B_summary_logicle <- summary(fcm1B_gate_r2) 
+mean_fcm1B_logicle <- fcm1B_summary_logicle[4, 10]
+fcm1B_summary_logicle <- as.data.frame(fcm1B_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm1B_logicle) %>%
+  mutate(., Cell_Count = cell_count_1B_logicle) %>% rename(Median = `fcm1B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+")
+fcm2A_summary_logicle <- summary(fcm2A_gate_r2)
+mean_fcm2A_logicle <- fcm2A_summary_logicle[4, 10]
+fcm2A_summary_logicle <- as.data.frame(fcm2A_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm2A_logicle) %>%
+  mutate(., Cell_Count = cell_count_2A_logicle) %>% rename(Median = `fcm2A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-")
+fcm2B_summary_logicle <- summary(fcm2B_gate_r2)
+mean_fcm2B_logicle <- fcm2B_summary_logicle[4, 10]
+fcm2B_summary_logicle <- as.data.frame(fcm2B_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm2B_logicle) %>%
+  mutate(., Cell_Count = cell_count_2B_logicle) %>% rename(Median = `fcm2B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+")
+
+logicle_summary <- rbind(fcm1A_summary_logicle, fcm1B_summary_logicle, fcm2A_summary_logicle, fcm2B_summary_logicle)
+logicle_summary <- logicle_summary[, c(4, 5, 3, 2, 1)]
+
+knitr::kable(logicle_summary)
+
+
+```
+
 
 ```{r word count}
 
