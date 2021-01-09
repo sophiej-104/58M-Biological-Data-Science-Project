@@ -265,52 +265,7 @@ autoplot(fcm2B_comp_trans)
 
 ```
 
-## Comparing Log vs Logicle Transformation
-
-### Log Channel FS vs SS Plots
-
-```{r plot log channel data, out.width="100%"}
-
-log_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_1A <- as.ggplot(log_1A)
-
-log_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_1B <- as.ggplot(log_1B)
-
-log_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_2A <- as.ggplot(log_2A)
-
-log_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw()
-log_2B <- as.ggplot(log_2B)
-
-ggpubr::ggarrange(log_1A, log_1B, log_2A, log_2B)
-
-```
-
-### Logicle FS vs SS Plots
-
-```{r plot logicle transformed data, out.width="100%"}
-
-logicle_1A <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_1A <- as.ggplot(logicle_1A) #converting to a ggplot so all four plots can be shown together using ggarrange
-
-logicle_1B <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_1B <- as.ggplot(logicle_1B)
-
-logicle_2A <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_2A <- as.ggplot(logicle_2A)
-
-logicle_2B <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw()
-logicle_2B <- as.ggplot(logicle_2B)
-
-ggpubr::ggarrange(logicle_1A, logicle_1B, logicle_2A, logicle_2B) #plotting the four plots together
-
-
-```
-
 ## Gating the Samples 
-
-
 
 ```{r setting the initial gating regions for log data, out.width="100%"}
 
@@ -411,7 +366,7 @@ ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_
 
 #setting up gating region
 
-poly_FITC <- matrix(c(100, Inf,                  
+poly_FITC <- matrix(c(60, Inf,                  
                   Inf, Inf), 
                 ncol = 1, 
                 nrow = 2, 
@@ -530,6 +485,8 @@ hist_logicle_1A <- ggcyto(fcm1A_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
 
 hist_logicle_1A <- as.ggplot(hist_logicle_1A)
 
+fcm1A_gate_r4 <- Subset(fcm1A_gate_r2, gate_r4)
+fcm1A_gate_r4df <- data.frame(fcm1A_gate_r4@exprs)
 
 hist_logicle_1B <- ggcyto(fcm1B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
   ylab("Count") +
@@ -537,6 +494,9 @@ hist_logicle_1B <- ggcyto(fcm1B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
   theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
 
 hist_logicle_1B <- as.ggplot(hist_logicle_1B)
+
+fcm1B_gate_r4 <- Subset(fcm1B_gate_r2, gate_r4)
+fcm1B_gate_r4df <- data.frame(fcm1B_gate_r4@exprs)
 
 # scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
 
@@ -547,12 +507,18 @@ hist_logicle_2A <- ggcyto(fcm2A_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
 
 hist_logicle_2A <- as.ggplot(hist_logicle_2A)
 
+fcm2A_gate_r4 <- Subset(fcm2A_gate_r2, gate_r4)
+fcm2A_gate_r4df <- data.frame(fcm2A_gate_r4@exprs)
+
 hist_logicle_2B <- ggcyto(fcm2B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
   ylab("Count") +
   xlab("FITC Lin") +
   theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
 
 hist_logicle_2B <- as.ggplot(hist_logicle_2B)
+
+fcm2B_gate_r4 <- Subset(fcm2B_gate_r2, gate_r4)
+fcm2B_gate_r4df <- data.frame(fcm2B_gate_r4@exprs)
 
 TNFalpha_detection_logicle <- ggpubr::ggarrange(logicle_1A_gate, hist_logicle_1A, hist_logicle_1B, hist_logicle_2A, hist_logicle_2B, labels = "AUTO")
 TNFalpha_detection_logicle
@@ -568,27 +534,161 @@ cell_count_1B_logicle <- nrow(fcm1B_gate_r2)
 cell_count_2A_logicle <- nrow(fcm2A_gate_r2)
 cell_count_2B_logicle <- nrow(fcm2B_gate_r2)
 
+FITC_count_1A_logicle <- nrow(fcm1A_gate_r4)
+FITC_count_1B_logicle <- nrow(fcm1B_gate_r4)
+FITC_count_2A_logicle <- nrow(fcm2A_gate_r4)
+FITC_count_2B_logicle <- nrow(fcm2B_gate_r4)
+
 fcm1A_summary_logicle <- summary(fcm1A_gate_r2) 
 mean_fcm1A_logicle <- fcm1A_summary_logicle[4, 10]
 fcm1A_summary_logicle <- as.data.frame(fcm1A_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm1A_logicle) %>%
-  mutate(., Cell_Count = cell_count_1A_logicle) %>% rename(Median = `fcm1A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
+  mutate(., Cell_Count = cell_count_1A_logicle) %>% rename(Median = `fcm1A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1A_logicle)
 fcm1B_summary_logicle <- summary(fcm1B_gate_r2) 
 mean_fcm1B_logicle <- fcm1B_summary_logicle[4, 10]
 fcm1B_summary_logicle <- as.data.frame(fcm1B_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm1B_logicle) %>%
-  mutate(., Cell_Count = cell_count_1B_logicle) %>% rename(Median = `fcm1B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+")
+  mutate(., Cell_Count = cell_count_1B_logicle) %>% rename(Median = `fcm1B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1B_logicle)
 fcm2A_summary_logicle <- summary(fcm2A_gate_r2)
 mean_fcm2A_logicle <- fcm2A_summary_logicle[4, 10]
 fcm2A_summary_logicle <- as.data.frame(fcm2A_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm2A_logicle) %>%
-  mutate(., Cell_Count = cell_count_2A_logicle) %>% rename(Median = `fcm2A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-")
+  mutate(., Cell_Count = cell_count_2A_logicle) %>% rename(Median = `fcm2A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2A_logicle)
 fcm2B_summary_logicle <- summary(fcm2B_gate_r2)
 mean_fcm2B_logicle <- fcm2B_summary_logicle[4, 10]
 fcm2B_summary_logicle <- as.data.frame(fcm2B_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm2B_logicle) %>%
-  mutate(., Cell_Count = cell_count_2B_logicle) %>% rename(Median = `fcm2B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+")
+  mutate(., Cell_Count = cell_count_2B_logicle) %>% rename(Median = `fcm2B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2B_logicle)
 
 logicle_summary <- rbind(fcm1A_summary_logicle, fcm1B_summary_logicle, fcm2A_summary_logicle, fcm2B_summary_logicle)
-logicle_summary <- logicle_summary[, c(4, 5, 3, 2, 1)]
+logicle_summary <- logicle_summary[, c(4, 5, 3, 6, 2, 1)]
 
 knitr::kable(logicle_summary)
+
+
+```
+
+
+```{r bacteria uptake, out.width="100%"}
+
+#setting up gating region
+
+poly_FITC <- matrix(c(60, Inf,                  
+                  Inf, Inf), 
+                ncol = 1, 
+                nrow = 2, 
+                byrow = T)
+
+colnames(poly_FITC) <- c("FL.3.Log")
+gate_r5 <- rectangleGate(poly_FITC, filterId = "gate_r5")
+
+
+red_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+  ylab("Count") +
+  xlab("PE-Texas Red Log") +
+  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+
+red_log_1A <- as.ggplot(red_log_1A)
+
+fcm1A_gate_r5 <- Subset(fcm1A_gate_r1, gate_r5)
+fcm1A_gate_r5df <- data.frame(fcm1A_gate_r5@exprs)
+
+red_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+  ylab("Count") +
+  xlab("PE-Texas Red Log") +
+  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+
+red_log_1B <- as.ggplot(red_log_1B)
+
+fcm1B_gate_r5 <- Subset(fcm1B_gate_r1, gate_r5)
+fcm1B_gate_r5df <- data.frame(fcm1B_gate_r5@exprs)
+
+# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+
+red_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+  ylab("Count") +
+  xlab("PE-Texas Red Log") +
+  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+
+red_log_2A <- as.ggplot(red_log_2A)
+
+fcm2A_gate_r5 <- Subset(fcm2A_gate_r1, gate_r5)
+fcm2A_gate_r5df <- data.frame(fcm2A_gate_r5@exprs)
+
+red_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+  ylab("Count") +
+  xlab("PE-Texas Red Log") +
+  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+
+red_log_2B <- as.ggplot(red_log_2B)
+
+fcm2B_gate_r5 <- Subset(fcm2B_gate_r1, gate_r5)
+fcm2B_gate_r5df <- data.frame(fcm2B_gate_r5@exprs)
+
+bacteria_detection <- ggpubr::ggarrange(log_1A_gate, red_log_1A, red_log_1B, red_log_2A, red_log_2B, labels = "AUTO")
+bacteria_detection
+
+ggsave("figures/Detection_of_Bacteria.png", bacteria_detection)
+
+
+```
+
+```{r logicle bacteria uptake, out.width="100%"}
+
+#setting up gating region
+
+poly_FITC <- matrix(c(2.25, Inf,                  
+                  Inf, Inf), 
+                ncol = 1, 
+                nrow = 2, 
+                byrow = T)
+
+colnames(poly_FITC) <- c("FL.3.Lin")
+gate_r6 <- rectangleGate(poly_FITC, filterId = "gate_r6")
+
+
+red_logicle_1A <- ggcyto(fcm1A_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
+  ylab("Count") +
+  xlab("PE-Texas Red Lin") +
+  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
+
+red_logicle_1A <- as.ggplot(red_logicle_1A)
+
+fcm1A_gate_r6 <- Subset(fcm1A_gate_r2, gate_r6)
+fcm1A_gate_r6df <- data.frame(fcm1A_gate_r6@exprs)
+
+red_logicle_1B <- ggcyto(fcm1B_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
+  ylab("Count") +
+  xlab("PE-Texas Red Lin") +
+  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
+
+red_logicle_1B <- as.ggplot(red_logicle_1B)
+
+fcm1B_gate_r6 <- Subset(fcm1B_gate_r2, gate_r6)
+fcm1B_gate_r6df <- data.frame(fcm1B_gate_r6@exprs)
+
+# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+
+red_logicle_2A <- ggcyto(fcm2A_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
+  ylab("Count") +
+  xlab("PE-Texas Red Lin") +
+  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
+
+red_logicle_2A <- as.ggplot(red_logicle_2A)
+
+fcm2A_gate_r6 <- Subset(fcm2A_gate_r2, gate_r6)
+fcm2A_gate_r6df <- data.frame(fcm2A_gate_r6@exprs)
+
+red_logicle_2B <- ggcyto(fcm2B_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
+  ylab("Count") +
+  xlab("PE-Texas Red Lin") +
+  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
+
+red_logicle_2B <- as.ggplot(red_logicle_2B)
+
+fcm2B_gate_r6 <- Subset(fcm2B_gate_r2, gate_r6)
+fcm2B_gate_r6df <- data.frame(fcm2B_gate_r6@exprs)
+
+bacteria_detection_logicle <- ggpubr::ggarrange(logicle_1A_gate, red_logicle_1A, red_logicle_1B, red_logicle_2A, red_logicle_2B, labels = "AUTO")
+bacteria_detection_logicle
+
+ggsave("figures/Detection_of_Bacteria_logicle.png", bacteria_detection_logicle)
 
 
 ```
