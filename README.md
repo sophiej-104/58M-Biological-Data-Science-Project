@@ -46,6 +46,10 @@ BiocManager::install("ggcyto")
 
 install.packages("ggpubr")
 
+#To install the wordcount addin used: 
+
+devtools::install_github("benmarwick/wordcountaddin", type = "source", dependencies = TRUE)
+
 --------------------------------------------------------------
 Set Up
 --------------------------------------------------------------
