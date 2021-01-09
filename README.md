@@ -62,4 +62,4 @@ To aid understanding of the column names in the .fcs files there is an additiona
 Additional Instructions
 --------------------------------------------------------------
 
-If using the script to process alternative data to that provided, the data will need to be checked to contain spillover data in order to carry out the compensation steps. This is done using the spillover() function from the flowCore package. If the data being used returns NULL (no spillover data), manual compensation may need to be carried out instead. 
+If using the script to process alternative data to that provided, the data will need to be checked to contain spillover data in order to carry out the compensation steps. This is done using the spillover() function from the flowCore package (this step is already included in the code chunk). If the spillover data is contained under a different key word to that for this current data set adjustments to the code chunks can be made. If the data being used returns NULL for every key word (no spillover data), manual compensation may need to be carried out instead. 
