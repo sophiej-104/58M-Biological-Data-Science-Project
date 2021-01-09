@@ -629,6 +629,38 @@ ggsave("figures/Detection_of_Bacteria.png", bacteria_detection)
 
 ```
 
+```{r table for log bacteria, out.width="100%"}
+
+cell_count_1A_bacteria <- nrow(fcm1A_gate_r1) 
+cell_count_1B_bacteria <- nrow(fcm1B_gate_r1)
+cell_count_2A_bacteria <- nrow(fcm2A_gate_r1)
+cell_count_2B_bacteria <- nrow(fcm2B_gate_r1)
+
+fcm1A_summary_bacteria <- summary(fcm1A_gate_r5) 
+mean_fcm1A_bacteria <- fcm1A_summary_bacteria[4, 18]
+fcm1A_summary_bacteria <- as.data.frame(fcm1A_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm1A_bacteria) %>%
+  mutate(., Cell_Count = cell_count_1A_bacteria) %>% rename(Median = `fcm1A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
+fcm1B_summary_bacteria <- summary(fcm1B_gate_r5) 
+mean_fcm1B_bacteria <- fcm1B_summary_bacteria[4, 18]
+fcm1B_summary_bacteria <- as.data.frame(fcm1B_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm1B_bacteria) %>%
+  mutate(., Cell_Count = cell_count_1B_bacteria) %>% rename(Median = `fcm1B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") 
+fcm2A_summary_bacteria <- summary(fcm2A_gate_r5)
+mean_fcm2A_bacteria <- fcm2A_summary_bacteria[4, 18]
+fcm2A_summary_bacteria <- as.data.frame(fcm2A_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm2A_bacteria) %>%
+  mutate(., Cell_Count = cell_count_2A_bacteria) %>% rename(Median = `fcm2A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") 
+fcm2B_summary_bacteria <- summary(fcm2B_gate_r5)
+mean_fcm2B_bacteria <- fcm2B_summary_bacteria[4, 18]
+fcm2B_summary_bacteria <- as.data.frame(fcm2B_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm2B_bacteria) %>%
+  mutate(., Cell_Count = cell_count_2B_bacteria) %>% rename(Median = `fcm2B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") 
+
+bacteria_summary <- rbind(fcm1A_summary_bacteria, fcm1B_summary_bacteria, fcm2A_summary_bacteria, fcm2B_summary_bacteria)
+bacteria_summary <- bacteria_summary[, c(4, 5, 3, 2, 1)]
+
+knitr::kable(bacteria_summary)
+
+```
+
+
 ```{r logicle bacteria uptake, out.width="100%"}
 
 #setting up gating region
