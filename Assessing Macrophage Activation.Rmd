@@ -141,6 +141,7 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 # Methods
 
 
+
 <!-- Link for Bioconductor How to guide: https://bioconductor.org/packages/devel/bioc/vignettes/flowCore/inst/doc/HowTo-flowCore.pdf -->
 
 
@@ -225,7 +226,7 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 ## Transformation
 
-This step is carried out in order to visualise the data more easily as many of the channels are not in a log format, the code here transforms the data into a "logicle" format. 
+This step is carried out in order to visualise the data more easily as many of the channels are not in a log format, the code used in this step transforms the data into a "logicle" format, other transformations can be used here instead if needed. However, for this report the log channel data is used.
 
 ```{r transforming the data}
 
@@ -250,9 +251,7 @@ fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 ```
 
-## Initial Visualisation
-
-```{r visualise transformed data, include=FALSE}
+```{r visualise transformed data, eval=FALSE, include=FALSE}
 
 autoplot(fcm1A_comp)
 autoplot(fcm1B_comp)
@@ -265,9 +264,15 @@ autoplot(fcm2B_comp_trans)
 
 ```
 
-## Gating the Samples 
+# Results
 
-```{r setting the initial gating regions for log data, out.width="100%"}
+<!-- figure legend -->
+
+(ref:gating-figure) **Forward-side scatter plots of RAW 264.7 cells by flow cytometry to show gating of live cells** <BR> **(A)** Unstimulated, non-stained cells. **(B)** Unstimulated cells stained with anti-TNF$\alpha$. **(C)** Macrophages exposed to red-fluorescent (rhodamine) bacteria, without anti-TNF$\alpha$ labelling. **(D)** Macrophages exposed to red-fluorescent (rhodamine) bacteria, with anti-TNF$\alpha$ labelling. The same gating was applied to all samples.
+
+<!-- end of figure legend -->
+
+```{r gating-figure, out.width="100%", fig.cap='(ref:gating-figure)'}
 
 # creating a matrix for the 1a sample
 
@@ -311,11 +316,11 @@ log_2B_gate <- as.ggplot(log_2B_gate)
 fcm2B_gate_r1 <- Subset(fcm2B_comp_trans, gate_r1)
 fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
 
-ggpubr::ggarrange(log_1A_gate, log_1B_gate, log_2A_gate, log_2B_gate)
+ggpubr::ggarrange(log_1A_gate, log_1B_gate, log_2A_gate, log_2B_gate, labels = "AUTO")
 
 ```
 
-```{r setting the initial gating regions for logicle data, out.width="100%"}
+```{r setting the initial gating regions for logicle data, include=FALSE, out.width="100%"}
 
 poly_logicle <- matrix(c(3.5, 2.5,                  
                   3.5, 4.5,
@@ -361,8 +366,13 @@ ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_
 
 ```
 
+<!-- figure legend -->
 
-```{r log histograms, out.width="100%"}
+(ref:histogram-figure) **Detection of TNF$\alpha$ in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria or LPS (100 ng/ml) by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells shows the absence of residual TNF$\alpha$ production. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for TNF$\alpha$ positive cells shows TNF$\alpha$ production by bacteria stimulated macrophages. 
+
+<!-- end of figure legend -->
+
+```{r histogram-figure, out.width="100%", fig.cap='(ref:histogram-figure)'}
 
 #setting up gating region
 
@@ -426,7 +436,7 @@ ggsave("figures/Detection_of_TNFalpha.png", TNFalpha_detection)
 ```
 
 
-```{r summary table log, out.width="100%"}
+```{r summary-table-log, out.width="100%"}
 
 cell_count_1A <- nrow(fcm1A_gate_r1) 
 cell_count_1B <- nrow(fcm1B_gate_r1)
@@ -440,31 +450,31 @@ FITC_count_2B <- nrow(fcm2B_gate_r3)
 
 fcm1A_summary <- summary(fcm1A_gate_r1) 
 mean_fcm1A <- fcm1A_summary[4, 12]
-fcm1A_summary <- as.data.frame(fcm1A_summary[3, 12]) %>% mutate(., Mean = mean_fcm1A) %>%
-  mutate(., Cell_Count = cell_count_1A) %>% rename(Median = `fcm1A_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1A)
+fcm1A_summary <- as.data.frame(fcm1A_summary[3, 12]) %>% mutate(., Mean_Fluorescence_Intensity = mean_fcm1A) %>%
+  mutate(., Cell_Count = cell_count_1A) %>% rename(Median_Fluorescence_Intensity = `fcm1A_summary[3, 12]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1A) %>% mutate(., Percentage_Cells_Positive_For_TNF = (FITC_count_1A/cell_count_1A)*100)
 fcm1B_summary <- summary(fcm1B_gate_r1) 
 mean_fcm1B <- fcm1B_summary[4, 12]
-fcm1B_summary <- as.data.frame(fcm1B_summary[3, 12]) %>% mutate(., Mean = mean_fcm1B) %>%
-  mutate(., Cell_Count = cell_count_1B) %>% rename(Median = `fcm1B_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1B)
+fcm1B_summary <- as.data.frame(fcm1B_summary[3, 12]) %>% mutate(., Mean_Fluorescence_Intensity = mean_fcm1B) %>%
+  mutate(., Cell_Count = cell_count_1B) %>% rename(Median_Fluorescence_Intensity = `fcm1B_summary[3, 12]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1B) %>% mutate(., Percentage_Cells_Positive_For_TNF = (FITC_count_1B/cell_count_1B)*100)
 fcm2A_summary <- summary(fcm2A_gate_r1)
 mean_fcm2A <- fcm2A_summary[4, 12]
-fcm2A_summary <- as.data.frame(fcm2A_summary[3, 12]) %>% mutate(., Mean = mean_fcm2A) %>%
-  mutate(., Cell_Count = cell_count_2A) %>% rename(Median = `fcm2A_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2A)
+fcm2A_summary <- as.data.frame(fcm2A_summary[3, 12]) %>% mutate(., Mean_Fluorescence_Intensity = mean_fcm2A) %>%
+  mutate(., Cell_Count = cell_count_2A) %>% rename(Median_Fluorescence_Intensity = `fcm2A_summary[3, 12]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2A) %>% mutate(., Percentage_Cells_Positive_For_TNF = (FITC_count_2A/cell_count_2A)*100)
 fcm2B_summary <- summary(fcm2B_gate_r1)
 mean_fcm2B <- fcm2B_summary[4, 12]
-fcm2B_summary <- as.data.frame(fcm2B_summary[3, 12]) %>% mutate(., Mean = mean_fcm2B) %>%
-  mutate(., Cell_Count = cell_count_2B) %>% rename(Median = `fcm2B_summary[3, 12]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2B)
+fcm2B_summary <- as.data.frame(fcm2B_summary[3, 12]) %>% mutate(., Mean_Fluorescence_Intensity = mean_fcm2B) %>%
+  mutate(., Cell_Count = cell_count_2B) %>% rename(Median_Fluorescence_Intensity = `fcm2B_summary[3, 12]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2B) %>% mutate(., Percentage_Cells_Positive_For_TNF = (FITC_count_2B/cell_count_2B)*100)
 
 log_summary <- rbind(fcm1A_summary, fcm1B_summary, fcm2A_summary, fcm2B_summary)
-log_summary <- log_summary[, c(4, 5, 3, 6, 2, 1)]
+log_summary <- log_summary[, c(4, 5, 3, 6, 7, 2, 1)]
 
-knitr::kable(log_summary) 
+knitr::kable(log_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the production of fluorecently labelled TNF-$\\alpha$ by macrophages stimulated with (+) or without (-) LPS or red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(log_summary)))
 
 #still need to find a way of extracting the positive cells for TNF-alpha (also using special characters in tables)
 
 ```
 
-```{r logicle histograms, out.width="100%"}
+```{r logicle histograms, include=FALSE, out.width="100%"}
 
 #setting up gating region
 
@@ -527,7 +537,7 @@ ggsave("figures/Detection_of_TNFalpha_logicle.png", TNFalpha_detection_logicle)
 
 ```
 
-```{r summary table logicle, out.width="100%"}
+```{r summary table logicle, include=FALSE, out.width="100%"}
 
 cell_count_1A_logicle <- nrow(fcm1A_gate_r2) 
 cell_count_1B_logicle <- nrow(fcm1B_gate_r2)
@@ -564,8 +574,14 @@ knitr::kable(logicle_summary)
 
 ```
 
+<!-- figure legend -->
 
-```{r bacteria uptake, out.width="100%"}
+(ref:bacteria-uptake) **Detection of red fluorescent (rhodamine) bacteria uptake in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria or LPS (100 ng/ml) by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for rhodamine bacteria positive cells.
+
+<!-- end of figure legend -->
+
+
+```{r bacteria-uptake, out.width="100%",fig.cap='(ref:bacteria-uptake)'}
 
 #setting up gating region
 
@@ -629,7 +645,7 @@ ggsave("figures/Detection_of_Bacteria.png", bacteria_detection)
 
 ```
 
-```{r table for log bacteria, out.width="100%"}
+```{r table-for-log-bacteria, out.width="100%"}
 
 cell_count_1A_bacteria <- nrow(fcm1A_gate_r1) 
 cell_count_1B_bacteria <- nrow(fcm1B_gate_r1)
@@ -638,30 +654,30 @@ cell_count_2B_bacteria <- nrow(fcm2B_gate_r1)
 
 fcm1A_summary_bacteria <- summary(fcm1A_gate_r5) 
 mean_fcm1A_bacteria <- fcm1A_summary_bacteria[4, 18]
-fcm1A_summary_bacteria <- as.data.frame(fcm1A_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm1A_bacteria) %>%
-  mutate(., Cell_Count = cell_count_1A_bacteria) %>% rename(Median = `fcm1A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
+fcm1A_summary_bacteria <- as.data.frame(fcm1A_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm1A_bacteria) %>%
+  mutate(., Cell_Count = cell_count_1A_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm1A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
 fcm1B_summary_bacteria <- summary(fcm1B_gate_r5) 
 mean_fcm1B_bacteria <- fcm1B_summary_bacteria[4, 18]
-fcm1B_summary_bacteria <- as.data.frame(fcm1B_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm1B_bacteria) %>%
-  mutate(., Cell_Count = cell_count_1B_bacteria) %>% rename(Median = `fcm1B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") 
+fcm1B_summary_bacteria <- as.data.frame(fcm1B_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm1B_bacteria) %>%
+  mutate(., Cell_Count = cell_count_1B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm1B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") 
 fcm2A_summary_bacteria <- summary(fcm2A_gate_r5)
 mean_fcm2A_bacteria <- fcm2A_summary_bacteria[4, 18]
-fcm2A_summary_bacteria <- as.data.frame(fcm2A_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm2A_bacteria) %>%
-  mutate(., Cell_Count = cell_count_2A_bacteria) %>% rename(Median = `fcm2A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") 
+fcm2A_summary_bacteria <- as.data.frame(fcm2A_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm2A_bacteria) %>%
+  mutate(., Cell_Count = cell_count_2A_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") 
 fcm2B_summary_bacteria <- summary(fcm2B_gate_r5)
 mean_fcm2B_bacteria <- fcm2B_summary_bacteria[4, 18]
-fcm2B_summary_bacteria <- as.data.frame(fcm2B_summary_bacteria[3, 18]) %>% mutate(., Mean = mean_fcm2B_bacteria) %>%
-  mutate(., Cell_Count = cell_count_2B_bacteria) %>% rename(Median = `fcm2B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") 
+fcm2B_summary_bacteria <- as.data.frame(fcm2B_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm2B_bacteria) %>%
+  mutate(., Cell_Count = cell_count_2B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") 
 
 bacteria_summary <- rbind(fcm1A_summary_bacteria, fcm1B_summary_bacteria, fcm2A_summary_bacteria, fcm2B_summary_bacteria)
 bacteria_summary <- bacteria_summary[, c(4, 5, 3, 2, 1)]
 
-knitr::kable(bacteria_summary)
+knitr::kable(bacteria_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the uptake of bacteria and TNF-$\\alpha$ production in macrophages stimulated with (+) or without (-) LPS or red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(bacteria_summary)))
 
 ```
 
 
-```{r logicle bacteria uptake, out.width="100%"}
+```{r logicle bacteria uptake, include=FALSE, out.width="100%"}
 
 #setting up gating region
 
@@ -729,6 +745,7 @@ ggsave("figures/Detection_of_Bacteria_logicle.png", bacteria_detection_logicle)
 ```{r word count}
 
 word_count <- wordcountaddin::word_count("Assessing Macrophage Activation.Rmd")
+word_count2 <- wordcountaddin::word_count("README.md")
 
 ```
 
@@ -736,7 +753,11 @@ word_count <- wordcountaddin::word_count("Assessing Macrophage Activation.Rmd")
 
 Word count calculated using [@Marwick]. 
 
-**Word Count:** `r word_count`
+**Word Count for Markdown:** `r word_count`
+
+**Word Count for README file:** `r word_count2`
+
+**Total Word Count:** `r (word_count + word_count2)`
 
 # References
 
