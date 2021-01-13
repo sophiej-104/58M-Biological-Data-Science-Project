@@ -140,6 +140,8 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 <!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor packages flowCore etc. -->
 # Methods
 
+For general data tidying and organisation the "tidyverse" package, [@tidy], was used.
+
 The processing and analysis of the flow cytometry data was carried out using the Bioconductor package "flowCore", [@flow]. Visualisation of the flow cytometry data was carried out using the packages "ggcyto", [@ggctyo] and "ggplot2", [@ggplot2]. 
 
 For more information on the Bioconductor packages please see the [website](https://www.bioconductor.org/). 
@@ -760,6 +762,8 @@ Word count calculated using [@Marwick].
 **Word Count for README file:** `r word_count2`
 
 **Total Word Count:** `r (word_count + word_count2)`
+
+All inline citations and references were produced using the "citr" package, [@citr]. 
 
 # References
 
