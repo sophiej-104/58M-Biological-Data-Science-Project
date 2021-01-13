@@ -140,7 +140,9 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 <!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor packages flowCore etc. -->
 # Methods
 
+The processing and analysis of the flow cytometry data was carried out using the Bioconductor package "flowCore", [@flow]. Visualisation of the flow cytometry data was carried out using the packages "ggcyto", [@ggctyo] and "ggplot2", [@ggplot2]. 
 
+For more information on the Bioconductor packages please see the [website](https://www.bioconductor.org/). 
 
 <!-- Link for Bioconductor How to guide: https://bioconductor.org/packages/devel/bioc/vignettes/flowCore/inst/doc/HowTo-flowCore.pdf -->
 
@@ -157,7 +159,7 @@ The data contains two samples:
 2A: not stained 
 2B: stained for intracellular TNF-$\alpha$ production, detected with an anti-rabbit 488 (Green)
 
-```{r reading in the data}
+```{r reading in the data, echo=TRUE}
 file1A <- "data-raw/class-sample/class 1A.fcs"
 fcm1A <- read.FCS(file1A, alter.names = TRUE) # alter.names argument 
 
@@ -176,7 +178,7 @@ fcm2B <- read.FCS(file2B, alter.names = TRUE)
 
 When using more than one fluorochrome is used, there is the possibility for their emission spectra to overlap. The overlap is often termed 'spillover' and this needs to be removed from the flow cytometry data through a process called compensation, [@ONeill2013-ub]. 
 
-```{r compensating the data, include=FALSE}
+```{r compensating the data, echo=TRUE, results='hide'}
 
 # each FCS file should contain compensation data
 
@@ -228,7 +230,7 @@ fcm2B_comp <- compensate(fcm2B, matrix2B)
 
 This step is carried out in order to visualise the data more easily as many of the channels are not in a log format, the code used in this step transforms the data into a "logicle" format, other transformations can be used here instead if needed. However, for this report the log channel data is used.
 
-```{r transforming the data}
+```{r transforming the data, echo=TRUE}
 
 trans1A <- estimateLogicle(fcm1A_comp, colnames(fcm1A_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
                                                                19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
