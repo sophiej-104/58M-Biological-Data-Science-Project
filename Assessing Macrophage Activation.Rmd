@@ -802,7 +802,7 @@ comp_log_2B <- as.ggplot(comp_log_2B)
 fcm2B_gate_r7 <- Subset(fcm2B_gate_r1, gate_r7)
 fcm2B_gate_r7df <- data.frame(fcm2B_gate_r7@exprs)
 
-comp_figure <- ggpubr::ggarrange(log_1A_gate, comp_log_1A, comp_log_1B, comp_log_2A, comp_log_2B, labels = "AUTO")
+comp_figure <- ggpubr::ggarrange(log_1A_gate, comp_log_1A, comp_log_1B, comp_log_2A, comp_log_2B, labels = "AUTO", ncol = 2, nrow = 3, vjust = .75)
 comp_figure
 
 ggsave("figures/Comparison_Figure.png", comp_figure)
