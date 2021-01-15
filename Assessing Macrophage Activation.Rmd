@@ -743,8 +743,72 @@ bacteria_detection_logicle
 ggsave("figures/Detection_of_Bacteria_logicle.png", bacteria_detection_logicle)
 
 
+
 ```
 
+```{r final-figure-comp, out.width="100%"}
+
+#setting up gating region
+
+comp_gate <- matrix(c(10, Inf,                  
+                  Inf, 10), 
+                ncol = 2, 
+                nrow = 2, 
+                byrow = T)
+
+colnames(comp_gate) <- c("FL.1.Log", "FL.3.Log")
+
+gate_r7 <- rectangleGate(comp_gate, filterId = "gate_r7")
+
+comp_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
+  ylab("PE-Texas Red Log") +
+  xlab("FITC Log") +
+  theme_bw() + geom_gate(gate_r7) + geom_stats()
+
+comp_log_1A <- as.ggplot(comp_log_1A)
+
+fcm1A_gate_r7 <- Subset(fcm1A_gate_r1, gate_r7)
+fcm1A_gate_r7df <- data.frame(fcm1A_gate_r7@exprs)
+
+comp_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
+  ylab("PE-Texas Red Log") +
+  xlab("FITC Log") +
+  theme_bw() + geom_gate(gate_r7) + geom_stats()
+
+comp_log_1B <- as.ggplot(comp_log_1B)
+
+fcm1B_gate_r7 <- Subset(fcm1B_gate_r1, gate_r7)
+fcm1B_gate_r7df <- data.frame(fcm1B_gate_r7@exprs)
+
+# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
+
+comp_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
+  ylab("PE-Texas Red Log") +
+  xlab("FITC Log") +
+  theme_bw() + geom_gate(gate_r7) + geom_stats()
+
+comp_log_2A <- as.ggplot(comp_log_2A)
+
+fcm2A_gate_r7 <- Subset(fcm2A_gate_r1, gate_r7)
+fcm2A_gate_r7df <- data.frame(fcm2A_gate_r7@exprs)
+
+comp_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
+  ylab("PE-Texas Red Log") +
+  xlab("FITC Log") +
+  theme_bw() + geom_gate(gate_r7) + geom_stats()
+
+comp_log_2B <- as.ggplot(comp_log_2B)
+
+fcm2B_gate_r7 <- Subset(fcm2B_gate_r1, gate_r7)
+fcm2B_gate_r7df <- data.frame(fcm2B_gate_r7@exprs)
+
+comp_figure <- ggpubr::ggarrange(log_1A_gate, comp_log_1A, comp_log_1B, comp_log_2A, comp_log_2B, labels = "AUTO")
+comp_figure
+
+ggsave("figures/Comparison_Figure.png", comp_figure)
+
+
+```
 
 ```{r word count}
 
