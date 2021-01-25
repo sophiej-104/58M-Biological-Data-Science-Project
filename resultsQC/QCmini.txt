@@ -1,2 +1,0 @@
-Name file	n. of events	% anomalies	analysis from	% anomalies flow Rate	% anomalies Signal	% anomalies Margins
-V1	10000	63.88	Flow Rate, Flow Signal and Flow Margin	63.33	26	1.12

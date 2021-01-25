@@ -257,6 +257,8 @@ fcm2B_comp_trans <- transform(fcm2B_comp, trans2B)
 
 ```{r visualise transformed data, eval=FALSE, include=FALSE}
 
+# These plots are to visualise and compare the transformed data
+
 autoplot(fcm1A_comp)
 autoplot(fcm1B_comp)
 autoplot(fcm2A_comp)
@@ -269,6 +271,8 @@ autoplot(fcm2B_comp_trans)
 ```
 
 # Results
+
+## Initial Gating of Samples
 
 <!-- figure legend -->
 
@@ -324,57 +328,13 @@ ggpubr::ggarrange(log_1A_gate, log_1B_gate, log_2A_gate, log_2B_gate, labels = "
 
 ```
 
-```{r setting the initial gating regions for logicle data, include=FALSE, out.width="100%"}
-
-poly_logicle <- matrix(c(3.5, 2.5,                  
-                  3.5, 4.5,
-                  4.5, 4.5,
-                  4.5, 2.5), 
-                ncol = 2, 
-                nrow = 4, 
-                byrow = T)
-
-colnames(poly_logicle) <- c("FS.Lin","SS.Lin")
-
-# creating polygongate
-
-gate_r2 <- polygonGate(poly_logicle, filterId = "gate_r2")
-
-# plotting samples with gating
-
-logicle_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
-logicle_1A_gate <- as.ggplot(logicle_1A_gate)
-
-fcm1A_gate_r2 <- Subset(fcm1A_comp_trans, gate_r2)
-fcm1A_gate_r2df <- data.frame(fcm1A_gate_r2@exprs)
-
-logicle_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
-logicle_1B_gate <- as.ggplot(logicle_1B_gate)
-
-fcm1B_gate_r2 <- Subset(fcm1B_comp_trans, gate_r2)
-fcm1B_gate_r2df <- data.frame(fcm1B_gate_r2@exprs)
-
-logicle_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
-logicle_2A_gate <- as.ggplot(logicle_2A_gate)
-
-fcm2A_gate_r2 <- Subset(fcm2A_comp_trans, gate_r2)
-fcm2A_gate_r2df <- data.frame(fcm2A_gate_r2@exprs)
-
-logicle_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Lin", y = "SS.Lin")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r2) + geom_stats()
-logicle_2B_gate <- as.ggplot(logicle_2B_gate)
-
-fcm2B_gate_r2 <- Subset(fcm2B_comp_trans, gate_r2)
-fcm2B_gate_r2df <- data.frame(fcm2B_gate_r2@exprs)
-
-ggpubr::ggarrange(logicle_1A_gate, logicle_1B_gate, logicle_2A_gate, logicle_2B_gate)
-
-```
-
 <!-- figure legend -->
 
-(ref:histogram-figure) **Detection of TNF$\alpha$ in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria or LPS (100 ng/ml) by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells shows the absence of residual TNF$\alpha$ production. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for TNF$\alpha$ positive cells shows TNF$\alpha$ production by bacteria stimulated macrophages. 
+(ref:histogram-figure) **Detection of TNF$\alpha$ in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells shows the absence of residual TNF$\alpha$ production. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for TNF$\alpha$ positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for TNF$\alpha$ positive cells shows TNF$\alpha$ production by bacteria stimulated macrophages. 
 
 <!-- end of figure legend -->
+
+## Detection of TNF-$\alpha$ 
 
 ```{r histogram-figure, out.width="100%", fig.cap='(ref:histogram-figure)'}
 
@@ -409,8 +369,6 @@ hist_log_1B <- as.ggplot(hist_log_1B)
 
 fcm1B_gate_r3 <- Subset(fcm1B_gate_r1, gate_r3)
 fcm1B_gate_r3df <- data.frame(fcm1B_gate_r3@exprs)
-
-# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
 
 hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
@@ -470,120 +428,19 @@ fcm2B_summary <- as.data.frame(fcm2B_summary[3, 12]) %>% mutate(., Mean_Fluoresc
   mutate(., Cell_Count = cell_count_2B) %>% rename(Median_Fluorescence_Intensity = `fcm2B_summary[3, 12]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2B) %>% mutate(., Percentage_Cells_Positive_For_TNF = (FITC_count_2B/cell_count_2B)*100)
 
 log_summary <- rbind(fcm1A_summary, fcm1B_summary, fcm2A_summary, fcm2B_summary)
-log_summary <- log_summary[, c(4, 5, 3, 6, 7, 2, 1)]
+log_summary <- log_summary[, c('Bacteria_Stimulation', 'Anti_TNF_Stain', 'Cell_Count', 'Cells_Positive_for_TNF', 'Percentage_Cells_Positive_For_TNF', 'Mean_Fluorescence_Intensity', 'Median_Fluorescence_Intensity')]
 
-knitr::kable(log_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the production of fluorecently labelled TNF-$\\alpha$ by macrophages stimulated with (+) or without (-) LPS or red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(log_summary)))
-
-#still need to find a way of extracting the positive cells for TNF-alpha (also using special characters in tables)
-
-```
-
-```{r logicle histograms, include=FALSE, out.width="100%"}
-
-#setting up gating region
-
-poly_FITC_logicle <- matrix(c(2.25, Inf,                  
-                  Inf, Inf), 
-                ncol = 1, 
-                nrow = 2, 
-                byrow = T)
-
-colnames(poly_FITC_logicle) <- c("FL.1.Lin")
-gate_r4 <- rectangleGate(poly_FITC_logicle, filterId = "gate_r4")
-
-
-hist_logicle_1A <- ggcyto(fcm1A_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
-  ylab("Count") +
-  xlab("FITC Lin") +
-  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
-
-hist_logicle_1A <- as.ggplot(hist_logicle_1A)
-
-fcm1A_gate_r4 <- Subset(fcm1A_gate_r2, gate_r4)
-fcm1A_gate_r4df <- data.frame(fcm1A_gate_r4@exprs)
-
-hist_logicle_1B <- ggcyto(fcm1B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
-  ylab("Count") +
-  xlab("FITC Lin") +
-  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
-
-hist_logicle_1B <- as.ggplot(hist_logicle_1B)
-
-fcm1B_gate_r4 <- Subset(fcm1B_gate_r2, gate_r4)
-fcm1B_gate_r4df <- data.frame(fcm1B_gate_r4@exprs)
-
-# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
-
-hist_logicle_2A <- ggcyto(fcm2A_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
-  ylab("Count") +
-  xlab("FITC Lin") +
-  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
-
-hist_logicle_2A <- as.ggplot(hist_logicle_2A)
-
-fcm2A_gate_r4 <- Subset(fcm2A_gate_r2, gate_r4)
-fcm2A_gate_r4df <- data.frame(fcm2A_gate_r4@exprs)
-
-hist_logicle_2B <- ggcyto(fcm2B_gate_r2, aes(x = FL.1.Lin)) + geom_histogram() +
-  ylab("Count") +
-  xlab("FITC Lin") +
-  theme_bw() + geom_gate(gate_r4) + geom_stats(adjust = 0.5)
-
-hist_logicle_2B <- as.ggplot(hist_logicle_2B)
-
-fcm2B_gate_r4 <- Subset(fcm2B_gate_r2, gate_r4)
-fcm2B_gate_r4df <- data.frame(fcm2B_gate_r4@exprs)
-
-TNFalpha_detection_logicle <- ggpubr::ggarrange(logicle_1A_gate, hist_logicle_1A, hist_logicle_1B, hist_logicle_2A, hist_logicle_2B, labels = "AUTO")
-TNFalpha_detection_logicle
-
-ggsave("figures/Detection_of_TNFalpha_logicle.png", TNFalpha_detection_logicle)
-
-```
-
-```{r summary table logicle, include=FALSE, out.width="100%"}
-
-cell_count_1A_logicle <- nrow(fcm1A_gate_r2) 
-cell_count_1B_logicle <- nrow(fcm1B_gate_r2)
-cell_count_2A_logicle <- nrow(fcm2A_gate_r2)
-cell_count_2B_logicle <- nrow(fcm2B_gate_r2)
-
-FITC_count_1A_logicle <- nrow(fcm1A_gate_r4)
-FITC_count_1B_logicle <- nrow(fcm1B_gate_r4)
-FITC_count_2A_logicle <- nrow(fcm2A_gate_r4)
-FITC_count_2B_logicle <- nrow(fcm2B_gate_r4)
-
-fcm1A_summary_logicle <- summary(fcm1A_gate_r2) 
-mean_fcm1A_logicle <- fcm1A_summary_logicle[4, 10]
-fcm1A_summary_logicle <- as.data.frame(fcm1A_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm1A_logicle) %>%
-  mutate(., Cell_Count = cell_count_1A_logicle) %>% rename(Median = `fcm1A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1A_logicle)
-fcm1B_summary_logicle <- summary(fcm1B_gate_r2) 
-mean_fcm1B_logicle <- fcm1B_summary_logicle[4, 10]
-fcm1B_summary_logicle <- as.data.frame(fcm1B_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm1B_logicle) %>%
-  mutate(., Cell_Count = cell_count_1B_logicle) %>% rename(Median = `fcm1B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_1B_logicle)
-fcm2A_summary_logicle <- summary(fcm2A_gate_r2)
-mean_fcm2A_logicle <- fcm2A_summary_logicle[4, 10]
-fcm2A_summary_logicle <- as.data.frame(fcm2A_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm2A_logicle) %>%
-  mutate(., Cell_Count = cell_count_2A_logicle) %>% rename(Median = `fcm2A_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2A_logicle)
-fcm2B_summary_logicle <- summary(fcm2B_gate_r2)
-mean_fcm2B_logicle <- fcm2B_summary_logicle[4, 10]
-fcm2B_summary_logicle <- as.data.frame(fcm2B_summary_logicle[3, 10]) %>% mutate(., Mean = mean_fcm2B_logicle) %>%
-  mutate(., Cell_Count = cell_count_2B_logicle) %>% rename(Median = `fcm2B_summary_logicle[3, 10]`) %>% mutate(., LPS_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_TNF = FITC_count_2B_logicle)
-
-logicle_summary <- rbind(fcm1A_summary_logicle, fcm1B_summary_logicle, fcm2A_summary_logicle, fcm2B_summary_logicle)
-logicle_summary <- logicle_summary[, c(4, 5, 3, 6, 2, 1)]
-
-knitr::kable(logicle_summary)
-
+knitr::kable(log_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the production of fluorecently labelled TNF-$\\alpha$ by macrophages stimulated with (+) or without (-) red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(log_summary)))
 
 ```
 
 <!-- figure legend -->
 
-(ref:bacteria-uptake) **Detection of red fluorescent (rhodamine) bacteria uptake in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria or LPS (100 ng/ml) by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for rhodamine bacteria positive cells.
+(ref:bacteria-uptake) **Detection of red fluorescent (rhodamine) bacteria uptake in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for rhodamine bacteria positive cells.
 
 <!-- end of figure legend -->
 
+## Detection of bacteria uptake
 
 ```{r bacteria-uptake, out.width="100%",fig.cap='(ref:bacteria-uptake)'}
 
@@ -618,8 +475,6 @@ red_log_1B <- as.ggplot(red_log_1B)
 
 fcm1B_gate_r5 <- Subset(fcm1B_gate_r1, gate_r5)
 fcm1B_gate_r5df <- data.frame(fcm1B_gate_r5@exprs)
-
-# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
 
 red_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
   ylab("Count") +
@@ -674,77 +529,13 @@ fcm2B_summary_bacteria <- as.data.frame(fcm2B_summary_bacteria[3, 18]) %>% mutat
   mutate(., Cell_Count = cell_count_2B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") 
 
 bacteria_summary <- rbind(fcm1A_summary_bacteria, fcm1B_summary_bacteria, fcm2A_summary_bacteria, fcm2B_summary_bacteria)
-bacteria_summary <- bacteria_summary[, c(4, 5, 3, 2, 1)]
+bacteria_summary <- bacteria_summary[, c('Bacteria_Stimulation', 'Anti_TNF_Stain', 'Cell_Count', 'Mean_PE_Texas_Red_Fluorescence_Intensity', 'Median_PE_Texas_Red_Fluorescence_Intensity')]
 
-knitr::kable(bacteria_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the uptake of bacteria and TNF-$\\alpha$ production in macrophages stimulated with (+) or without (-) LPS or red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(bacteria_summary)))
-
-```
-
-
-```{r logicle bacteria uptake, include=FALSE, out.width="100%"}
-
-#setting up gating region
-
-poly_FITC <- matrix(c(2.25, Inf,                  
-                  Inf, Inf), 
-                ncol = 1, 
-                nrow = 2, 
-                byrow = T)
-
-colnames(poly_FITC) <- c("FL.3.Lin")
-gate_r6 <- rectangleGate(poly_FITC, filterId = "gate_r6")
-
-
-red_logicle_1A <- ggcyto(fcm1A_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
-  ylab("Count") +
-  xlab("PE-Texas Red Lin") +
-  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
-
-red_logicle_1A <- as.ggplot(red_logicle_1A)
-
-fcm1A_gate_r6 <- Subset(fcm1A_gate_r2, gate_r6)
-fcm1A_gate_r6df <- data.frame(fcm1A_gate_r6@exprs)
-
-red_logicle_1B <- ggcyto(fcm1B_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
-  ylab("Count") +
-  xlab("PE-Texas Red Lin") +
-  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
-
-red_logicle_1B <- as.ggplot(red_logicle_1B)
-
-fcm1B_gate_r6 <- Subset(fcm1B_gate_r2, gate_r6)
-fcm1B_gate_r6df <- data.frame(fcm1B_gate_r6@exprs)
-
-# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
-
-red_logicle_2A <- ggcyto(fcm2A_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
-  ylab("Count") +
-  xlab("PE-Texas Red Lin") +
-  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
-
-red_logicle_2A <- as.ggplot(red_logicle_2A)
-
-fcm2A_gate_r6 <- Subset(fcm2A_gate_r2, gate_r6)
-fcm2A_gate_r6df <- data.frame(fcm2A_gate_r6@exprs)
-
-red_logicle_2B <- ggcyto(fcm2B_gate_r2, aes(x = FL.3.Lin)) + geom_histogram() + 
-  ylab("Count") +
-  xlab("PE-Texas Red Lin") +
-  theme_bw() + geom_gate(gate_r6) + geom_stats(adjust = 0.5)
-
-red_logicle_2B <- as.ggplot(red_logicle_2B)
-
-fcm2B_gate_r6 <- Subset(fcm2B_gate_r2, gate_r6)
-fcm2B_gate_r6df <- data.frame(fcm2B_gate_r6@exprs)
-
-bacteria_detection_logicle <- ggpubr::ggarrange(logicle_1A_gate, red_logicle_1A, red_logicle_1B, red_logicle_2A, red_logicle_2B, labels = "AUTO")
-bacteria_detection_logicle
-
-ggsave("figures/Detection_of_Bacteria_logicle.png", bacteria_detection_logicle)
-
-
+knitr::kable(bacteria_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the uptake of bacteria and TNF-$\\alpha$ production in macrophages stimulated with (+) or without (-) red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(bacteria_summary)))
 
 ```
+
+## Comparison of TNF-$\alpha$ production and bacteria uptake
 
 ```{r final-figure-comp, out.width="100%"}
 
@@ -779,8 +570,6 @@ comp_log_1B <- as.ggplot(comp_log_1B)
 
 fcm1B_gate_r7 <- Subset(fcm1B_gate_r1, gate_r7)
 fcm1B_gate_r7df <- data.frame(fcm1B_gate_r7@exprs)
-
-# scale_fill_discrete(name = "", labels = c(expression("no anti-TNF"*alpha*~"staining"), expression("anti-TNF"*alpha*~"staining")))
 
 comp_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
