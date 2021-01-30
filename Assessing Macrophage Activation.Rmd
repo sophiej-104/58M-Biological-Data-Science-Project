@@ -164,9 +164,11 @@ The data contains two samples:
 2A: not stained 
 2B: stained for intracellular TNF-$\alpha$ production, detected with an anti-rabbit 488 (Green)
 
+Note: the code used reads in the files as separate flowFrames, alternatively all files can be read in together as a flowSet which is used to ensure metadata and flowFrames remain together, and minimise memory usage when handling a larger number of samples. 
+
 ```{r reading in the data, echo=TRUE}
 file1A <- "data-raw/class-sample/class 1A.fcs"
-fcm1A <- read.FCS(file1A, alter.names = TRUE) # alter.names argument 
+fcm1A <- read.FCS(file1A, alter.names = TRUE)
 
 file1B <- "data-raw/class-sample/class 1B.fcs"
 fcm1B <- read.FCS(file1B, alter.names = TRUE)
