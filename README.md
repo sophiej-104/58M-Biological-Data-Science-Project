@@ -14,7 +14,7 @@ Packages Required
 * ggplot2 (Version 3.3.2)
 * flowCore (Version 2.2.0)
 * ggcyto (Version 1.18.0)
-* ggpubr (Version 0.4.0)
+* patchwork (Version 1.1.1)
 
 The code here can be copied and run directly in R to install the packages
 
@@ -42,9 +42,9 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 
 BiocManager::install("ggcyto")
 
-#Installing ggpubr
+#Installing patchwork
 
-install.packages("ggpubr")
+install.packages("patchwork")
 
 #To install the wordcount addin used: 
 

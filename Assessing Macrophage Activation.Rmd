@@ -23,6 +23,7 @@ library(tidyverse)
 library(ggplot2)
 library(flowCore)
 library(ggcyto)
+library(patchwork)
 ```
 
 <!-- Provide an introduction to the experiment, why it's important/it's application in context -->
@@ -143,6 +144,8 @@ knitr::include_url("https://www.youtube.com/embed/EQXPJ7eeesQ")
 For general data tidying and organisation the "tidyverse" package, [@tidy], was used.
 
 The processing and analysis of the flow cytometry data was carried out using the Bioconductor package "flowCore", [@flow]. Visualisation of the flow cytometry data was carried out using the packages "ggcyto", [@ggctyo] and "ggplot2", [@ggplot2]. 
+
+Arrangement of plots were made using "patchwork", [@patchwork].
 
 For more information on the Bioconductor packages please see the [website](https://www.bioconductor.org/). 
 
@@ -280,6 +283,10 @@ autoplot(fcm2B_comp_trans)
 
 <!-- end of figure legend -->
 
+```{r ggplot-theme}
+source("scripts/theme_flow.R")
+```
+
 ```{r gating-figure, out.width="100%", fig.cap='(ref:gating-figure)'}
 
 # creating a matrix for the 1a sample
@@ -300,31 +307,31 @@ gate_r1 <- polygonGate(poly_log, filterId = "gate_r1")
 
 # plotting samples with gating
 
-log_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
 log_1A_gate <- as.ggplot(log_1A_gate)
 
 fcm1A_gate_r1 <- Subset(fcm1A_comp_trans, gate_r1)
 fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
 
-log_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
 log_1B_gate <- as.ggplot(log_1B_gate)
 
 fcm1B_gate_r1 <- Subset(fcm1B_comp_trans, gate_r1)
 fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
 
-log_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
 log_2A_gate <- as.ggplot(log_2A_gate)
 
 fcm2A_gate_r1 <- Subset(fcm2A_comp_trans, gate_r1)
 fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
 
-log_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_bw() + geom_gate(gate_r1) + geom_stats()
+log_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
 log_2B_gate <- as.ggplot(log_2B_gate)
 
 fcm2B_gate_r1 <- Subset(fcm2B_comp_trans, gate_r1)
 fcm2B_gate_r1df <- data.frame(fcm2B_gate_r1@exprs)
 
-ggpubr::ggarrange(log_1A_gate, log_1B_gate, log_2A_gate, log_2B_gate, labels = "AUTO")
+log_1A_gate + log_1B_gate + log_2A_gate + log_2B_gate + plot_annotation(tag_levels = 'A')
 
 ```
 
@@ -336,7 +343,7 @@ ggpubr::ggarrange(log_1A_gate, log_1B_gate, log_2A_gate, log_2B_gate, labels = "
 
 ## Detection of TNF-$\alpha$ 
 
-```{r histogram-figure, out.width="100%", fig.cap='(ref:histogram-figure)'}
+```{r histogram-figure, fig.dim = c(9, 7.5), fig.cap='(ref:histogram-figure)'}
 
 #setting up gating region
 
@@ -349,48 +356,48 @@ poly_FITC <- matrix(c(60, Inf,
 colnames(poly_FITC) <- c("FL.1.Log")
 gate_r3 <- rectangleGate(poly_FITC, filterId = "gate_r3")
 
-
-hist_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
+hist_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5) 
 
 hist_log_1A <- as.ggplot(hist_log_1A)
 
 fcm1A_gate_r3 <- Subset(fcm1A_gate_r1, gate_r3)
 fcm1A_gate_r3df <- data.frame(fcm1A_gate_r3@exprs)
 
-hist_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
+hist_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5) 
 
 hist_log_1B <- as.ggplot(hist_log_1B)
 
 fcm1B_gate_r3 <- Subset(fcm1B_gate_r1, gate_r3)
 fcm1B_gate_r3df <- data.frame(fcm1B_gate_r3@exprs)
 
-hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
+hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_2A <- as.ggplot(hist_log_2A)
 
 fcm2A_gate_r3 <- Subset(fcm2A_gate_r1, gate_r3)
 fcm2A_gate_r3df <- data.frame(fcm2A_gate_r3@exprs)
 
-hist_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log)) + geom_histogram() + scale_x_log10() +
+hist_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
 
 hist_log_2B <- as.ggplot(hist_log_2B)
 
 fcm2B_gate_r3 <- Subset(fcm2B_gate_r1, gate_r3)
 fcm2B_gate_r3df <- data.frame(fcm2B_gate_r3@exprs)
 
-TNFalpha_detection <- ggpubr::ggarrange(log_1A_gate, hist_log_1A, hist_log_1B, hist_log_2A, hist_log_2B, labels = "AUTO")
+TNFalpha_detection <- log_1A_gate + hist_log_1A + hist_log_1B + hist_log_2A + hist_log_2B + plot_annotation(tag_levels = 'A') + plot_layout(ncol = 2)
+
 TNFalpha_detection
 
 ggsave("figures/Detection_of_TNFalpha.png", TNFalpha_detection)
@@ -442,7 +449,7 @@ knitr::kable(log_summary, caption = "Summary statistics obtained from flow cytom
 
 ## Detection of bacteria uptake
 
-```{r bacteria-uptake, out.width="100%",fig.cap='(ref:bacteria-uptake)'}
+```{r bacteria-uptake, fig.dim = c(9, 7.5), fig.cap='(ref:bacteria-uptake)'}
 
 #setting up gating region
 
@@ -456,47 +463,48 @@ colnames(poly_FITC) <- c("FL.3.Log")
 gate_r5 <- rectangleGate(poly_FITC, filterId = "gate_r5")
 
 
-red_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+red_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
 
 red_log_1A <- as.ggplot(red_log_1A)
 
 fcm1A_gate_r5 <- Subset(fcm1A_gate_r1, gate_r5)
 fcm1A_gate_r5df <- data.frame(fcm1A_gate_r5@exprs)
 
-red_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+red_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
 
 red_log_1B <- as.ggplot(red_log_1B)
 
 fcm1B_gate_r5 <- Subset(fcm1B_gate_r1, gate_r5)
 fcm1B_gate_r5df <- data.frame(fcm1B_gate_r5@exprs)
 
-red_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+red_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
 
 red_log_2A <- as.ggplot(red_log_2A)
 
 fcm2A_gate_r5 <- Subset(fcm2A_gate_r1, gate_r5)
 fcm2A_gate_r5df <- data.frame(fcm2A_gate_r5@exprs)
 
-red_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.3.Log)) + geom_histogram() + scale_x_log10() +
+red_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_bw() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
 
 red_log_2B <- as.ggplot(red_log_2B)
 
 fcm2B_gate_r5 <- Subset(fcm2B_gate_r1, gate_r5)
 fcm2B_gate_r5df <- data.frame(fcm2B_gate_r5@exprs)
 
-bacteria_detection <- ggpubr::ggarrange(log_1A_gate, red_log_1A, red_log_1B, red_log_2A, red_log_2B, labels = "AUTO")
+bacteria_detection <- log_1A_gate + red_log_1A + red_log_1B + red_log_2A + red_log_2B + plot_annotation(tag_levels = 'A') + plot_layout(ncol = 2)
+
 bacteria_detection
 
 ggsave("figures/Detection_of_Bacteria.png", bacteria_detection)
@@ -511,25 +519,33 @@ cell_count_1B_bacteria <- nrow(fcm1B_gate_r1)
 cell_count_2A_bacteria <- nrow(fcm2A_gate_r1)
 cell_count_2B_bacteria <- nrow(fcm2B_gate_r1)
 
+red_count_1A <- nrow(fcm1A_gate_r5)
+red_count_1B <- nrow(fcm1B_gate_r5)
+red_count_2A <- nrow(fcm2A_gate_r5)
+red_count_2B <- nrow(fcm2B_gate_r5)
+
 fcm1A_summary_bacteria <- summary(fcm1A_gate_r5) 
 mean_fcm1A_bacteria <- fcm1A_summary_bacteria[4, 18]
 fcm1A_summary_bacteria <- as.data.frame(fcm1A_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm1A_bacteria) %>%
-  mutate(., Cell_Count = cell_count_1A_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm1A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-")
+  mutate(., Cell_Count = cell_count_1A_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm1A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_Bacteria = red_count_1A) %>% mutate(., Percentage_Cells_Positive_For_Bacteria = (red_count_1A/cell_count_1A_bacteria)*100)
+
 fcm1B_summary_bacteria <- summary(fcm1B_gate_r5) 
 mean_fcm1B_bacteria <- fcm1B_summary_bacteria[4, 18]
 fcm1B_summary_bacteria <- as.data.frame(fcm1B_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm1B_bacteria) %>%
-  mutate(., Cell_Count = cell_count_1B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm1B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") 
+  mutate(., Cell_Count = cell_count_1B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm1B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "-") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_Bacteria = red_count_1B) %>% mutate(., Percentage_Cells_Positive_For_Bacteria = (red_count_1B/cell_count_1B_bacteria)*100)
+
 fcm2A_summary_bacteria <- summary(fcm2A_gate_r5)
 mean_fcm2A_bacteria <- fcm2A_summary_bacteria[4, 18]
 fcm2A_summary_bacteria <- as.data.frame(fcm2A_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm2A_bacteria) %>%
-  mutate(., Cell_Count = cell_count_2A_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") 
+  mutate(., Cell_Count = cell_count_2A_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2A_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "-") %>% mutate(., Cells_Positive_for_Bacteria = red_count_2A) %>% mutate(., Percentage_Cells_Positive_For_Bacteria = (red_count_2A/cell_count_2A_bacteria)*100)
+
 fcm2B_summary_bacteria <- summary(fcm2B_gate_r5)
 mean_fcm2B_bacteria <- fcm2B_summary_bacteria[4, 18]
 fcm2B_summary_bacteria <- as.data.frame(fcm2B_summary_bacteria[3, 18]) %>% mutate(., Mean_PE_Texas_Red_Fluorescence_Intensity = mean_fcm2B_bacteria) %>%
-  mutate(., Cell_Count = cell_count_2B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") 
+  mutate(., Cell_Count = cell_count_2B_bacteria) %>% rename(Median_PE_Texas_Red_Fluorescence_Intensity = `fcm2B_summary_bacteria[3, 18]`) %>% mutate(., Bacteria_Stimulation = "+") %>% mutate(., Anti_TNF_Stain = "+") %>% mutate(., Cells_Positive_for_Bacteria = red_count_2B) %>% mutate(., Percentage_Cells_Positive_For_Bacteria = (red_count_2B/cell_count_2B_bacteria)*100)
 
 bacteria_summary <- rbind(fcm1A_summary_bacteria, fcm1B_summary_bacteria, fcm2A_summary_bacteria, fcm2B_summary_bacteria)
-bacteria_summary <- bacteria_summary[, c('Bacteria_Stimulation', 'Anti_TNF_Stain', 'Cell_Count', 'Mean_PE_Texas_Red_Fluorescence_Intensity', 'Median_PE_Texas_Red_Fluorescence_Intensity')]
+bacteria_summary <- bacteria_summary[, c('Bacteria_Stimulation', 'Anti_TNF_Stain', 'Cell_Count', 'Cells_Positive_for_Bacteria', 'Percentage_Cells_Positive_For_Bacteria', 'Mean_PE_Texas_Red_Fluorescence_Intensity', 'Median_PE_Texas_Red_Fluorescence_Intensity')]
 
 knitr::kable(bacteria_summary, caption = "Summary statistics obtained from flow cytometry analysis comparing the uptake of bacteria and TNF-$\\alpha$ production in macrophages stimulated with (+) or without (-) red fluorescent (rhodamine) bacteria", col.names = gsub("[_]", " ", names(bacteria_summary)))
 
@@ -554,7 +570,7 @@ gate_r7 <- rectangleGate(comp_gate, filterId = "gate_r7")
 comp_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7) + geom_stats()
 
 comp_log_1A <- as.ggplot(comp_log_1A)
 
@@ -564,7 +580,7 @@ fcm1A_gate_r7df <- data.frame(fcm1A_gate_r7@exprs)
 comp_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7) + geom_stats()
 
 comp_log_1B <- as.ggplot(comp_log_1B)
 
@@ -574,7 +590,7 @@ fcm1B_gate_r7df <- data.frame(fcm1B_gate_r7@exprs)
 comp_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7) + geom_stats()
 
 comp_log_2A <- as.ggplot(comp_log_2A)
 
@@ -584,14 +600,15 @@ fcm2A_gate_r7df <- data.frame(fcm2A_gate_r7@exprs)
 comp_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_bw() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7) + geom_stats()
 
 comp_log_2B <- as.ggplot(comp_log_2B)
 
 fcm2B_gate_r7 <- Subset(fcm2B_gate_r1, gate_r7)
 fcm2B_gate_r7df <- data.frame(fcm2B_gate_r7@exprs)
 
-comp_figure <- ggpubr::ggarrange(log_1A_gate, comp_log_1A, comp_log_1B, comp_log_2A, comp_log_2B, labels = "AUTO", ncol = 2, nrow = 3, vjust = .75)
+comp_figure <- log_1A_gate + comp_log_1A + comp_log_1B + comp_log_2A + comp_log_2B + plot_annotation(tag_levels = 'A') + plot_layout(ncol = 2)
+
 comp_figure
 
 ggsave("figures/Comparison_Figure.png", comp_figure)
