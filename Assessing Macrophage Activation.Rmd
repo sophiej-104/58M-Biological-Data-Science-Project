@@ -164,7 +164,7 @@ The data contains two samples:
 2A: not stained 
 2B: stained for intracellular TNF-$\alpha$ production, detected with an anti-rabbit 488 (Green)
 
-Note: the code used reads in the files as separate flowFrames, alternatively all files can be read in together as a flowSet which is used to ensure metadata and flowFrames remain together, and minimise memory usage when handling a larger number of samples. 
+<!-- Note: the code used reads in the files as separate flowFrames, alternatively all files can be read in together as a flowSet which is used to ensure metadata and flowFrames remain together, and minimise memory usage when handling a larger number of samples.  -->
 
 ```{r reading in the data, echo=TRUE}
 file1A <- "data-raw/class-sample/class 1A.fcs"
@@ -309,25 +309,25 @@ gate_r1 <- polygonGate(poly_log, filterId = "gate_r1")
 
 # plotting samples with gating
 
-log_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
+log_1A_gate <- ggcyto(fcm1A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1, colour = "darkblue") + geom_stats()
 log_1A_gate <- as.ggplot(log_1A_gate)
 
 fcm1A_gate_r1 <- Subset(fcm1A_comp_trans, gate_r1)
 fcm1A_gate_r1df <- data.frame(fcm1A_gate_r1@exprs)
 
-log_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
+log_1B_gate <- ggcyto(fcm1B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1, colour = "darkblue") + geom_stats()
 log_1B_gate <- as.ggplot(log_1B_gate)
 
 fcm1B_gate_r1 <- Subset(fcm1B_comp_trans, gate_r1)
 fcm1B_gate_r1df <- data.frame(fcm1B_gate_r1@exprs)
 
-log_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
+log_2A_gate <- ggcyto(fcm2A_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1, colour = "darkblue") + geom_stats()
 log_2A_gate <- as.ggplot(log_2A_gate)
 
 fcm2A_gate_r1 <- Subset(fcm2A_comp_trans, gate_r1)
 fcm2A_gate_r1df <- data.frame(fcm2A_gate_r1@exprs)
 
-log_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1) + geom_stats()
+log_2B_gate <- ggcyto(fcm2B_comp_trans, aes(x = "FS.Log", y = "SS.Log")) + geom_hex(bins = 100) + theme_flow() + geom_gate(gate_r1, colour = "darkblue") + geom_stats()
 log_2B_gate <- as.ggplot(log_2B_gate)
 
 fcm2B_gate_r1 <- Subset(fcm2B_comp_trans, gate_r1)
@@ -361,7 +361,7 @@ gate_r3 <- rectangleGate(poly_FITC, filterId = "gate_r3")
 hist_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5) 
+  theme_flow() + geom_gate(gate_r3, colour = "darkblue") + geom_stats(adjust = 0.5) 
 
 hist_log_1A <- as.ggplot(hist_log_1A)
 
@@ -371,7 +371,7 @@ fcm1A_gate_r3df <- data.frame(fcm1A_gate_r3@exprs)
 hist_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5) 
+  theme_flow() + geom_gate(gate_r3, colour = "darkblue") + geom_stats(adjust = 0.5) 
 
 hist_log_1B <- as.ggplot(hist_log_1B)
 
@@ -381,7 +381,7 @@ fcm1B_gate_r3df <- data.frame(fcm1B_gate_r3@exprs)
 hist_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r3, colour = "darkblue") + geom_stats(adjust = 0.5)
 
 hist_log_2A <- as.ggplot(hist_log_2A)
 
@@ -391,7 +391,7 @@ fcm2A_gate_r3df <- data.frame(fcm2A_gate_r3@exprs)
 hist_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r3) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r3, colour = "darkblue") + geom_stats(adjust = 0.5)
 
 hist_log_2B <- as.ggplot(hist_log_2B)
 
@@ -443,6 +443,8 @@ knitr::kable(log_summary, caption = "Summary statistics obtained from flow cytom
 
 ```
 
+TNF-$\alpha$ was shown to be produced by cells exposed to bacteria (Figure \@ref(fig:histogram-figure)). `r round(log_summary[4,5], digits = 2)`% of the bacteria stimulated cells were shown to be positive for TNF-$\alpha$, compared to `r round(log_summary[2,5], digits = 2)`% of unstimulated cells. The stimulated macrophages also displayed greater mean fluorescence intensity values than unstimulated cells (Table \@ref(tab:summary-table-log)).
+
 <!-- figure legend -->
 
 (ref:bacteria-uptake) **Detection of red fluorescent (rhodamine) bacteria uptake in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. Gated cells used to produce fluorescence histograms. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. Gating for rhodamine bacteria positive cells. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Gating for rhodamine bacteria positive cells.
@@ -468,7 +470,7 @@ gate_r5 <- rectangleGate(poly_FITC, filterId = "gate_r5")
 red_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5, colour = "darkblue") + geom_stats(adjust = 0.5)
 
 red_log_1A <- as.ggplot(red_log_1A)
 
@@ -478,7 +480,7 @@ fcm1A_gate_r5df <- data.frame(fcm1A_gate_r5@exprs)
 red_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5, colour = "darkblue") + geom_stats(adjust = 0.5)
 
 red_log_1B <- as.ggplot(red_log_1B)
 
@@ -488,7 +490,7 @@ fcm1B_gate_r5df <- data.frame(fcm1B_gate_r5@exprs)
 red_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5, colour = "darkblue") + geom_stats(adjust = 0.5)
 
 red_log_2A <- as.ggplot(red_log_2A)
 
@@ -498,7 +500,7 @@ fcm2A_gate_r5df <- data.frame(fcm2A_gate_r5@exprs)
 red_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.3.Log)) + geom_histogram(fill = "#095B7C", color="#103C4E") + scale_x_log10() +
   ylab("Count") +
   xlab("PE-Texas Red Log") +
-  theme_flow() + geom_gate(gate_r5) + geom_stats(adjust = 0.5)
+  theme_flow() + geom_gate(gate_r5, colour = "darkblue") + geom_stats(adjust = 0.5)
 
 red_log_2B <- as.ggplot(red_log_2B)
 
@@ -555,7 +557,13 @@ knitr::kable(bacteria_summary, caption = "Summary statistics obtained from flow 
 
 ## Comparison of TNF-$\alpha$ production and bacteria uptake
 
-```{r final-figure-comp, out.width="100%"}
+<!-- figure legend -->
+
+(ref:final-figure-comp) **Detection of red fluorescent (rhodamine) bacteria uptake and TNF-$\alpha$ in RAW 264.7 cells stimulated with or without red fluorescent (rhodamine) bacteria by flow cytometry** <BR> **(A)** Forward-side scatter of unstimulated, non-stained cells to show live gating of cells. The same gating was applied to all samples. **(B)** Unstimulated, cells stained without anti-TNF$\alpha$. **(C)** Unstimulated cells stained with anti-TNF$\alpha$. **(D)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled without anti-TNF$\alpha$. **(E)** Cells stimulated with red fluorescent (rhodamine) bacteria labelled with anti-$\alpha$. Two distinct populations of cells denoted by R8 and R9 gates. R8 gate is representative of cells positive for TNF-$\alpha$ only (single positive cells). R9 gate is representative of double positive cells, displaying bacteria uptake and TNF-$\alpha$ production. 
+
+<!-- end of figure legend -->
+
+```{r final-figure-comp, out.width="100%", fig.cap='(ref:final-figure-comp)'}
 
 #setting up gating region
 
@@ -569,10 +577,34 @@ colnames(comp_gate) <- c("FL.1.Log", "FL.3.Log")
 
 gate_r7 <- rectangleGate(comp_gate, filterId = "gate_r7")
 
+#gating for TNF and bacteria positive cells
+
+tnf_gate <- matrix(c(100, 10,
+                     100, 120,
+                     500, 120,
+                     500, 10),
+                   ncol = 2,
+                   nrow = 4,
+                   byrow = T)
+
+colnames(tnf_gate) <- c("FL.1.Log", "FL.3.Log")
+gate_r8 <- polygonGate(tnf_gate, filterId = "gate_r8")
+
+bacteria_gate <- matrix(c(500, 10,
+                          500, 120,
+                          1750, 120,
+                          1750, 10),
+                        ncol = 2,
+                        nrow = 4,
+                        byrow = T)
+
+colnames(bacteria_gate) <- c("FL.1.Log", "FL.3.Log")
+gate_r9 <- polygonGate(bacteria_gate, filterId = "gate_r9")
+
 comp_log_1A <- ggcyto(fcm1A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7, colour = "darkblue") 
 
 comp_log_1A <- as.ggplot(comp_log_1A)
 
@@ -582,7 +614,7 @@ fcm1A_gate_r7df <- data.frame(fcm1A_gate_r7@exprs)
 comp_log_1B <- ggcyto(fcm1B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7, colour = "darkblue") 
 
 comp_log_1B <- as.ggplot(comp_log_1B)
 
@@ -592,18 +624,21 @@ fcm1B_gate_r7df <- data.frame(fcm1B_gate_r7@exprs)
 comp_log_2A <- ggcyto(fcm2A_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r7) + geom_stats()
+  theme_flow() + geom_gate(gate_r7, colour = "darkblue") 
 
 comp_log_2A <- as.ggplot(comp_log_2A)
 
 fcm2A_gate_r7 <- Subset(fcm2A_gate_r1, gate_r7)
 fcm2A_gate_r7df <- data.frame(fcm2A_gate_r7@exprs)
 
-comp_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) + scale_x_log10() + scale_y_log10() +
+comp_log_2B <- ggcyto(fcm2B_gate_r1, aes(x = FL.1.Log, y = FL.3.Log)) + geom_hex(bins = 128) +
+  scale_x_log10() + scale_y_log10() +
   ylab("PE-Texas Red Log") +
   xlab("FITC Log") +
-  theme_flow() + geom_gate(gate_r7) + geom_stats()
-
+  theme_flow() + annotate("text", x = 200, y = 180, label = "R8", size = 3) +
+  annotate("text", x = 800, y = 180, label = "R9", size = 3) +
+  geom_gate(gate_r7, colour = "darkblue") + geom_gate(gate_r8, colour = "darkblue") + geom_gate(gate_r9, colour = "darkblue") 
+  
 comp_log_2B <- as.ggplot(comp_log_2B)
 
 fcm2B_gate_r7 <- Subset(fcm2B_gate_r1, gate_r7)
@@ -617,6 +652,8 @@ ggsave("figures/Comparison_Figure.png", comp_figure)
 
 
 ```
+
+A greater mean red fluorescence intensity was observed in the cell samples exposed to bacteria than the unstimulated population, providing some evidence of phagocytosis (Tabel \@ref(tab:table-for-log-bacteria)). A scatter plot produced from macrophages exposed to bacteria identifies two distinct populations of cells (Figure \@ref(fig:final-figure-comp)). The R8 gate represents a population of single positive cells that produce TNF-$\alpha$ only. The double positive population is denoted by R9, which is positive for both TNF-$\alpha$ and bacteria uptake. 
 
 ```{r word count}
 
