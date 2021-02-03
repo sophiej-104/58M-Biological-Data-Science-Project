@@ -1630,12 +1630,11 @@ div.tocify {
 
 <h1 class="title toc-ignore">Assessing Macrophage Activation and Response to Bacterial Infection <em>in vitro</em></h1>
 <h4 class="author">Examination Number: Y3856686</h4>
-<h4 class="date">January, 2021</h4>
+<h4 class="date">February, 2021</h4>
 
 </div>
 
 
-<!-- Provide an introduction to the experiment, why it's important/it's application in context -->
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>Macrophages are mononuclear cells with high phagocytic activity, <span class="citation">(Schnyder and Baggiolini 1978)</span>. They have key roles in the immune responses, particularly the production of proinflammatory cytokines and the phagocytosis of microorganisms, <span class="citation">(Murray et al. 2005)</span>.</p>
@@ -1643,8 +1642,6 @@ div.tocify {
 <p>The necrosis of tumours in response to bacterial-endotoxins was first determined to be an indirect process by, <span class="citation">(O’Malley, Achinstein, and Shear 1962)</span>, in which the necrosis could be triggered by a serum, derived from animals treated with lipopolysaccharides (LPS), in animals not exposed to LPS. This was deemed to be mediated by a “tumour necrotizing factor” later determined to be a superfamily that includes the protein Tumour Necrosis Factor-<span class="math inline">\(\alpha\)</span> (TNF-<span class="math inline">\(\alpha\)</span>).</p>
 <p>Understanding the mechanisms by which macrophages are activated, and their subsequent production of TNF-<span class="math inline">\(\alpha\)</span>, is important for aiding research into chronic inflammatory diseases such as rheumatoid arthritis and multiple sclerosis, <span class="citation">(Plevy et al. 1997)</span>. Uncontrolled macrophage activation is noted to be key in such chronic inflammatory diseases, <span class="citation">(Sindrilaru et al. 2011)</span>, with TNF-<span class="math inline">\(\alpha\)</span> being classed as a proinflammatory macrophage marker.</p>
 <p>The aim of this study is to gain understanding of the mechanisms by which macrophages are activated/respond and produce TNF-<span class="math inline">\(\alpha\)</span>, specifically with regards to the necessity of phagocytosis in the production of TNF-<span class="math inline">\(\alpha\)</span>.</p>
-<!-- Decide whether to include the images and results from the western blot analysis of own results -->
-<!-- This could allow me to show import of image  -->
 </div>
 <div id="is-phagocytosis-required-to-trigger-the-production-of-tnf-alpha-by-macrophages" class="section level1">
 <h1><span class="header-section-number">2</span> Is phagocytosis required to trigger the production of TNF-<span class="math inline">\(\alpha\)</span> by macrophages?</h1>
@@ -1671,8 +1668,6 @@ Figure 2.2: <strong>Identification of the Molecular Weight of TNF-<span class="m
 <!-- figure legend -->
 
 <!-- end of figure legend -->
-<!-- Provide some explanation and background information on the protocol of Flow Cytometry, maybe include a brief description and comparison to Summit -->
-<!-- There is a user guide to Summit on the VLE? -->
 </div>
 <div id="determining-the-level-of-tnf-alpha-expression-using-flow-cytometry" class="section level1">
 <h1><span class="header-section-number">3</span> Determining the level of TNF-<span class="math inline">\(\alpha\)</span> expression using Flow Cytometry</h1>
@@ -1683,11 +1678,10 @@ Figure 2.2: <strong>Identification of the Molecular Weight of TNF-<span class="m
 <p>For an overview of the technique please see the video, <span class="citation">(mitedustar 2015)</span>.</p>
 <iframe src="https://www.youtube.com/embed/EQXPJ7eeesQ" width="672" height="400px">
 </iframe>
-<!-- Description of the methods for this analysis of data, and explanation of the packages used, including the bioconductor packages flowCore etc. -->
 </div>
 </div>
-<div id="methods" class="section level1">
-<h1><span class="header-section-number">4</span> Methods</h1>
+<div id="methods-for-data-analysis" class="section level1">
+<h1><span class="header-section-number">4</span> Methods for Data Analysis</h1>
 <p>For general data tidying and organisation the “tidyverse” package, <span class="citation">(Wickham et al. 2019)</span>, was used.</p>
 <p>The processing and analysis of the flow cytometry data was carried out using the Bioconductor package “flowCore”, <span class="citation">(Ellis et al. 2020)</span>. Visualisation of the flow cytometry data was carried out using the packages “ggcyto”, <span class="citation">(Van et al. 2018)</span> and “ggplot2”, <span class="citation">(Wickham 2016)</span>.</p>
 <p>Arrangement of plots were made using “patchwork”, <span class="citation">(Pedersen 2020)</span>.</p>
@@ -1717,7 +1711,7 @@ file2B &lt;- &quot;data-raw/class-sample/class 2B.fcs&quot;
 fcm2B &lt;- read.FCS(file2B, alter.names = TRUE)</code></pre>
 <div id="compensation" class="section level2">
 <h2><span class="header-section-number">5.1</span> Compensation</h2>
-<p>When using more than one fluorochrome is used, there is the possibility for their emission spectra to overlap. The overlap is often termed ‘spillover’ and this needs to be removed from the flow cytometry data through a process called compensation, <span class="citation">(O’Neill et al. 2013)</span>.</p>
+<p>When using more than one fluorochrome, there is the possibility for their emission spectra to overlap. The overlap is often termed ‘spillover’ and this needs to be removed from the flow cytometry data through a process called compensation, <span class="citation">(O’Neill et al. 2013)</span>.</p>
 <pre class="r"><code># each FCS file should contain compensation data
 
 #Sample 1A
@@ -1758,9 +1752,7 @@ matrix2B &lt;- spillover(fcm2B)$`$SPILLOVER`
 matrix2B
 colnames(matrix2B) &lt;- c(&quot;FL.1.Log&quot;, &quot;FL.3.Log&quot;, &quot;FL.4.Log&quot;)
 
-fcm2B_comp &lt;- compensate(fcm2B, matrix2B)
-
-# As the spillover matrices are the same in each sample - can try and read in as a flowSet instead and apply over all at the same time (if time allows at the end)</code></pre>
+fcm2B_comp &lt;- compensate(fcm2B, matrix2B)</code></pre>
 </div>
 <div id="transformation" class="section level2">
 <h2><span class="header-section-number">5.2</span> Transformation</h2>
@@ -1780,9 +1772,7 @@ fcm2A_comp_trans &lt;- transform(fcm2A_comp, trans2A)
 
 trans2B &lt;- estimateLogicle(fcm2B_comp, colnames(fcm2B_comp[, c(1:5, 7:8, 10:11, 13:14, 16:17,
                                                                19:20, 22:23, 25:26, 28:29, 31:32, 24:35)]))
-fcm2B_comp_trans &lt;- transform(fcm2B_comp, trans2B)
-
-# Logicle is different to Log - carry out analysis for both to see which works better. </code></pre>
+fcm2B_comp_trans &lt;- transform(fcm2B_comp, trans2B)</code></pre>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -1963,9 +1953,9 @@ Figure 6.4: <strong>Detection of red fluorescent (rhodamine) bacteria uptake and
 <div id="word-count" class="section level1">
 <h1><span class="header-section-number">7</span> Word Count</h1>
 <p>Word count calculated using <span class="citation">(Marwick 2020)</span>.</p>
-<p><strong>Word Count for Markdown:</strong> 1622</p>
+<p><strong>Word Count for Markdown:</strong> 1623</p>
 <p><strong>Word Count for README file:</strong> 373</p>
-<p><strong>Total Word Count:</strong> 1995</p>
+<p><strong>Total Word Count:</strong> 1996</p>
 <p>All inline citations and references were produced using the “citr” package, <span class="citation">(Aust 2019)</span>.</p>
 </div>
 <div id="references" class="section level1 unnumbered">

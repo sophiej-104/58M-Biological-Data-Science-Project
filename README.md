@@ -4,7 +4,7 @@
 
 # Assessing Macrophage Activation and Response to Bacterial Infection *in vitro*
 
-The aim of this project is to reproduce an investigation into macrophage activation and response to bacterial infection from previous use of the Summit software system during the Stage II module Laboratory and Professional Skills for the Bioscientist - Bioscience Techniques, Immunology strand. 
+The aim of this project is to reproduce an investigation into macrophage activation and response to bacterial infection from previous use of the Summit software system during the Stage II module Laboratory and Professional Skills for the Bioscientist - Bioscience Techniques, Immunobiology strand. 
 
 ---------------------------------------------------------------
 Packages Required
@@ -16,7 +16,7 @@ Packages Required
 * ggcyto (Version 1.18.0)
 * patchwork (Version 1.1.1)
 
-The code here can be copied and run directly in R to install the packages
+The code here can be copied and run directly in R to install the packages:
 
 #Installing the tidyverse
 
